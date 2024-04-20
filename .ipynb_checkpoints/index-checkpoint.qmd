@@ -29,10 +29,10 @@ How does your application's interface work to address the needs of your end user
 
 The following four UI designs are mainly used to meet the needs of users:
 
-1. Different colored legends were designed to represent different types of land. For example, green represents arable land, yellow represents bare land, and gray represents cities.
+1. Different colored legends were designed to represent different types of land. For example, green represents vegetation, yellow represents bare land, and gray represents urban.
 2. A dropdown menu related to time has been designed, allowing users to freely choose the year and month before and after the conflict.
 3. A line chart has been designed, allowing users to clearly see the changes in arable land area between 5 months before and after the conflict.
-4. Designed a GIF animation where users can see the changes in three types of land in Gaza after the conflict.
+4. Designed a GIF animated map, where users can see the changes in three types of land in Gaza after the conflict and download it.
 
 
 ## The Application 
@@ -48,39 +48,30 @@ Replace the link below with the link to your application.
 
 Use this section to explain how your application works using code blocks and text explanations (no more than 500 words excluding code):
 
-```js
-Map.setCenter(35.51898, 33.90153, 15);
-
-Map.setOptions("satellite");
-
-var aoi = ee.Geometry.Point(35.51898, 33.90153).buffer(3000);
-```
 
 
-##Interface
-#1. Select the relevant year to display the appropriate layer
-Firstly,  Create a map instance and Set the center point and zoom level of the map
+
+### Interface
+1. Create a map instance and Set the center point and zoom level of the map
 
 ```js
 var map1 = ui.Map();
-
 map1.centerObject(aoi,10.5);
 ```
-![Pixelwise T-Test, 2018](images/beirut_change_2020.jpg)
 
-Then Create a selection box where the user can select 11, 12, 1, 2, 3 and add response logic when options change. After that call the function to update the displayed layer.
+2. Add a side UI, then create a selection box to place it in the side UI. Users can select 2022-11, 2022-12, 2023-1, 2023-2, 2023-11, 2023-12, 2024-1, 2024-2, 2024-3, and call a function to update the displayed layer.
 ```js
 var imageCollection = classificationCollection.map(function(img){
   return img.clip(aoi);
 });
-// Create a selection box where the user can select 11, 12, 1, 2, 3
+// Create a selection box 
 var select = ui.Select({
   items: ['2022-11', '2022-12', '2023-01', '2023-02', '2023-03','2023-11', '2023-12', '2024-01', '2024-02', '2024-03'],
   value: '2022-11',  //Default selection '2022-11'
   placeholder: 'Choose a number',
   onChange: function(value) {
-    // Here you can add the response logic when the options change
-    updateMaps(value); // Call the function to update the map
+    // Call the function to update the map
+    updateMaps(value);
   }
 });
 
@@ -97,7 +88,6 @@ var controlPanel = ui.Panel({
 // Add the map to the root panel
 ui.root.widgets().reset([map1]);
 
-
 // Set the style of the map
 map1.style().set('width', '65%');
 
@@ -110,9 +100,8 @@ var sidebarPanel = ui.Panel({
 // Adds the sidebar panel to the root panel
 ui.root.add(sidebarPanel);
 ```
-![Pixelwise T-Test, 2018](images/beirut_change_2020.jpg)
 
-This is the detail of update function. In this function, we first converts a collection of images to a list, then determine the index of the image by month 
+This is the detail of update function. In this function, we first converts a collection of images to a list, then determine the index of the image by month. 
 ```js
 // Converts a collection of images to a list
 var imageList = imageCollection.toList(imageCollection.size());
@@ -146,7 +135,7 @@ function updateMaps(month) {
       index1 = 7;
       break;
     case '2024-02':
-      index2 = 8;
+      index1 = 8;
       break;
     case '2024-03':
       index1 = 9;
@@ -159,9 +148,7 @@ function updateMaps(month) {
   var image1 = ee.Image(imageList.get(index1));
 ```
 
-
-#2. Add the legends to the map
-First define the color list and description list, then create the legend style and legend panel. Add legend items in a loop. It contains description labels and color blocks, adds legend items to the inside version of the diagram, and adds legends to the lower left corner of the map.
+3. Add the legends to the map. We define the color list and description list, then create the legend style and legend panel. Add legend items in a loop. It contains description labels and color blocks, adds legend items to the inside version of the diagram, and adds legends to the lower left corner of the map.
 ```js
 pdateMaps('2022-11');
 
@@ -214,16 +201,36 @@ for (var i = 0; i < palette.length; i++) {
 // Add the legend to the bottom left corner of the map
 map1.add(legendPanel);
 ```
-![Pixelwise T-Test, 2018](images/beirut_change_2020.jpg)
 
+4. Before drawing a line graph of vegetation area changes before and after conflicts, we need to export the image for area calculation. (Note: Due to the high computational complexity, calling the area calculation function directly can lead to long waiting times and may cause webpage crashes. Therefore, it is necessary to export the area calculation results first.)
 
-#3.The vegetation area before and after the conflict was calculated, and the change of vegetation area before and after the war was shown using line plots.
-
-First calculate the vegetation area of each layer
 ```js
+// Batch download functions
+function exportImage(image, roi, fileName) {  
+  Export.image.toAsset({  
+    image: image,
+    description: 'GAZA_'+fileName,
+    region: aoi,
+    scale: 10,
+    maxPixels: 1e13, // Maximum image element
+  });  
+}
+
+// Generate the list and download iteratively
+var indexList = classificationCollection.reduceColumns(ee.Reducer.toList(), ["system:index"]).get("list"); 
+print("indexList", indexList);
+indexList.evaluate(function(indexs) { 
+  for (var i=0; i<indexs.length; i++) {  
+    var image = classificationCollection.filter(ee.Filter.eq("system:index", indexs[i]))
+      .first()
+    var name=parseInt(indexs[i])
+        
+    exportImage(image, aoi, name);  //Save the image to Asset
+  }
+}); 
 
 var aoi = ee.FeatureCollection('users/liujingyue01/Gaza');
-var imageCollection=ee.ImageCollection('projects/ee-guo112591/assets/GAZA');
+var imageCollection=ee.ImageCollection('projects/hongkairen81/assets/GAZA');
 print(imageCollection)
 
 // Calculating the vegetation area as a function
@@ -241,17 +248,16 @@ var vegetationAreas = imageCollection.map(calculateVegetationArea).sort('date');
 
 // Convert the result to a list
 var vegetationAreaList = vegetationAreas.toList(vegetationAreas.size());
-
 print(vegetationAreaList)
-
 var firstFive = ee.List.sequence(0, 9).map(function(i) { return ee.Feature(vegetationAreaList.get(i)).get('vegetationArea'); });
+// var lastFive = ee.List.sequence(5, 9).map(function(i) { return ee.Feature(vegetationAreaList.get(i)).get('vegetationArea'); });
 
 // Convert the area to a numerical value
 var firstFiveNumbers = firstFive.map(function(area) { return ee.Number(area); });
 print(firstFiveNumbers)
 ```
-In order to reduce the time, we manually enter the calculated time above into the code and then generate the line chart.
-Set two y values in the line chart, respectively before conflict and after conflict
+5. Draw the area calculation results onto a line graph. Set two y values before and after the conflict, which are two lines.
+
 ```js
 var firstFiveNumbers = ee.List([ 108.981451,
   124.064503,
@@ -316,9 +322,8 @@ sidebarPanel.style().set({
 sidebarPanel.add(lineChart);
 ```
 
+6. Draw a GIF image of post conflict land changes (November 2023.11-204.3) and place it in the side UI.
 
-
-4. The land changes after the conflict (2023.11-2024.3) were drawn as a GIF image, and a download button was designed.
 ```js
 //show gif
 function main() {
@@ -388,8 +393,8 @@ function main() {
 main();
 ```
 
+7. Create a tag and set the tag's hyperlink to download the GIF.
 
-Create a tag and set the tag's hyperlink to download the GIF.
 ```js
 // Create a label
   var label = ui.Label('Download the GIF of "Changing Land Conditions in Conflict".');
