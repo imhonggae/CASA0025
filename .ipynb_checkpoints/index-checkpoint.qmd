@@ -20,17 +20,19 @@ What data are you using?
 
 How are you using this data to address the problem?
 
+math:
+$$ \Large t = {\frac{\overline{x_1}-\overline{x_2}} {\sqrt{\frac{s^2_1}{n_1} + \frac{s^2_2}{n_2}}}} $$
+
 ### Interface
 
 How does your application's interface work to address the needs of your end user?
 
-There are four main steps in the process of creating the User Interface (UI):
+The following four UI designs are mainly used to meet the needs of users:
 
-  1.Use the year selector to select the relevant year to display the appropriate layer.
-  2.Add the legends to the map.
-  3.The vegetation area before and after the conflict was calculated, and the change of vegetation area before and after the war was shown using line plots.
-  4.Draw all the month layers as GIFs.
-  5.Click the GIF download button to complete the GIF download.
+1. Different colored legends were designed to represent different types of land. For example, green represents arable land, yellow represents bare land, and gray represents cities.
+2. A dropdown menu related to time has been designed, allowing users to freely choose the year and month before and after the conflict.
+3. A line chart has been designed, allowing users to clearly see the changes in arable land area between 5 months before and after the conflict.
+4. Designed a GIF animation where users can see the changes in three types of land in Gaza after the conflict.
 
 
 ## The Application 
@@ -316,7 +318,7 @@ sidebarPanel.add(lineChart);
 
 
 
-#4.Draw all the month layers as GIFs and Click the GIF download button to complete the GIF download.
+4. The land changes after the conflict (2023.11-2024.3) were drawn as a GIF image, and a download button was designed.
 ```js
 //show gif
 function main() {
@@ -329,23 +331,19 @@ function main() {
   });
   
   // Gets the number of images in the collection
-var count =imgCol.toList(imgCol.size()).length();
+  var count =imgCol.toList(imgCol.size()).length();
 
-// Calculate the number of images to skip
-var skipCount = 5;
+  // Calculate the number of images to skip
+  var skipCount = 5;
 
-// Skip the previous images to get the last five images
-var lastFiveImages = classificationCollection.toList(classificationCollection.size())
+  // Skip the previous images to get the last five images
+  var lastFiveImages = classificationCollection.toList(classificationCollection.size())
   .slice(skipCount, count);
 
-// Converts a list back to a collection of images
-imgCol = ee.ImageCollection.fromImages(lastFiveImages).map(function(img){
-  return img.clip(aoi)
-});
-
-  
-  
-  
+  // Converts a list back to a collection of images
+  imgCol = ee.ImageCollection.fromImages(lastFiveImages).map(function(img){
+    return img.clip(aoi)
+  });
 
   // Defines a function to map a single-band image to an RGB color
   function mapToRgb(image) {
@@ -354,17 +352,17 @@ imgCol = ee.ImageCollection.fromImages(lastFiveImages).map(function(img){
 
     // Creates a new image with the same R, G, and B values for each pixel
     var r = band.where(band.eq(0), 0).where(band.eq(1), 255).where(band.eq(2), 200).toInt(); 
-  var g = band.where(band.eq(0), 128).where(band.eq(1), 255).where(band.eq(2), 200).toInt(); 
-  var b = band.where(band.eq(0), 0).where(band.eq(1), 0).where(band.eq(2), 200).toInt();
+    var g = band.where(band.eq(0), 128).where(band.eq(1), 255).where(band.eq(2), 200).toInt(); 
+    var b = band.where(band.eq(0), 0).where(band.eq(1), 0).where(band.eq(2), 200).toInt();
 
-   // Returns a new image containing the RGB band
+    // Returns a new image containing the RGB band
     return ee.Image.cat(r, g, b).rename(['red', 'green', 'blue']).toFloat();
-}
+  }
 
   // Map each image to an RGB color
   var rgbImgCol = imgCol.map(mapToRgb);
 
- // GIF parameters
+  // GIF parameters
   var params = {
     crs: 'EPSG:3857',
     framesPerSecond: 2,
@@ -374,6 +372,7 @@ imgCol = ee.ImageCollection.fromImages(lastFiveImages).map(function(img){
     bands: ['red', 'green', 'blue'],
     dimensions: 512,
   };
+
   // Add the GIF to the panel
   sidebarPanel.add(ui.Thumbnail(rgbImgCol, params));
   
@@ -400,11 +399,8 @@ Create a tag and set the tag's hyperlink to download the GIF.
 ```
 
 
-You can include images:
+The image output should look like this:
 
 ![Changing Land conditions in Conflict, 2023.11-2024.3](images/conflict.gif)
-
-and math:
-$$ \Large t = {\frac{\overline{x_1}-\overline{x_2}} {\sqrt{\frac{s^2_1}{n_1} + \frac{s^2_2}{n_2}}}} $$
 
 

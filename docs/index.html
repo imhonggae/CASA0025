@@ -133,12 +133,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="methodology" class="level3">
 <h3 class="anchored" data-anchor-id="methodology">Methodology</h3>
 <p>How are you using this data to address the problem?</p>
+<p>math: <span class="math display">\[ \Large t = {\frac{\overline{x_1}-\overline{x_2}} {\sqrt{\frac{s^2_1}{n_1} + \frac{s^2_2}{n_2}}}} \]</span></p>
 </section>
 <section id="interface" class="level3">
 <h3 class="anchored" data-anchor-id="interface">Interface</h3>
 <p>How does your application’s interface work to address the needs of your end user?</p>
-<p>There are four main steps in the process of creating the User Interface (UI):</p>
-<p>1.Use the year selector to select the relevant year to display the appropriate layer. 2.Add the legends to the map. 3.The vegetation area before and after the conflict was calculated, and the change of vegetation area before and after the war was shown using line plots. 4.Draw all the month layers as GIFs. 5.Click the GIF download button to complete the GIF download.</p>
+<p>The following four UI designs are mainly used to meet the needs of users:</p>
+<ol type="1">
+<li>Different colored legends were designed to represent different types of land. For example, green represents arable land, yellow represents bare land, and gray represents cities.</li>
+<li>A dropdown menu related to time has been designed, allowing users to freely choose the year and month before and after the conflict.</li>
+<li>A line chart has been designed, allowing users to clearly see the changes in arable land area between 5 months before and after the conflict.</li>
+<li>Designed a GIF animation where users can see the changes in three types of land in Gaza after the conflict.</li>
+</ol>
 </section>
 </section>
 <section id="the-application" class="level2 page-columns page-full">
@@ -406,7 +412,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a><span class="co">// Adds a line chart to the sidebar panel</span></span>
 <span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>sidebarPanel<span class="op">.</span><span class="fu">add</span>(lineChart)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>#4.Draw all the month layers as GIFs and Click the GIF download button to complete the GIF download.</p>
+<ol start="4" type="1">
+<li>The land changes after the conflict (2023.11-2024.3) were drawn as a GIF image, and a download button was designed.</li>
+</ol>
 <div class="sourceCode" id="cb8"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">//show gif</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">//Assume that the roi is defined and is a Feature or FeatureCollection</span></span>
@@ -418,78 +426,74 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Gets the number of images in the collection</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> count <span class="op">=</span>imgCol<span class="op">.</span><span class="fu">toList</span>(imgCol<span class="op">.</span><span class="fu">size</span>())<span class="op">.</span><span class="fu">length</span>()<span class="op">;</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> count <span class="op">=</span>imgCol<span class="op">.</span><span class="fu">toList</span>(imgCol<span class="op">.</span><span class="fu">size</span>())<span class="op">.</span><span class="fu">length</span>()<span class="op">;</span></span>
 <span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">// Calculate the number of images to skip</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> skipCount <span class="op">=</span> <span class="dv">5</span><span class="op">;</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Calculate the number of images to skip</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> skipCount <span class="op">=</span> <span class="dv">5</span><span class="op">;</span></span>
 <span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co">// Skip the previous images to get the last five images</span></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> lastFiveImages <span class="op">=</span> classificationCollection<span class="op">.</span><span class="fu">toList</span>(classificationCollection<span class="op">.</span><span class="fu">size</span>())</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Skip the previous images to get the last five images</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> lastFiveImages <span class="op">=</span> classificationCollection<span class="op">.</span><span class="fu">toList</span>(classificationCollection<span class="op">.</span><span class="fu">size</span>())</span>
 <span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">slice</span>(skipCount<span class="op">,</span> count)<span class="op">;</span></span>
 <span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="co">// Converts a list back to a collection of images</span></span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>imgCol <span class="op">=</span> ee<span class="op">.</span><span class="at">ImageCollection</span><span class="op">.</span><span class="fu">fromImages</span>(lastFiveImages)<span class="op">.</span><span class="fu">map</span>(<span class="kw">function</span>(img){</span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> img<span class="op">.</span><span class="fu">clip</span>(aoi)</span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Converts a list back to a collection of images</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>  imgCol <span class="op">=</span> ee<span class="op">.</span><span class="at">ImageCollection</span><span class="op">.</span><span class="fu">fromImages</span>(lastFiveImages)<span class="op">.</span><span class="fu">map</span>(<span class="kw">function</span>(img){</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> img<span class="op">.</span><span class="fu">clip</span>(aoi)</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
 <span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Defines a function to map a single-band image to an RGB color</span></span>
-<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>  <span class="kw">function</span> <span class="fu">mapToRgb</span>(image) {</span>
-<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Get a single band image</span></span>
-<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> band <span class="op">=</span> image<span class="op">.</span><span class="fu">select</span>([<span class="dv">0</span>])<span class="op">;</span></span>
-<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Creates a new image with the same R, G, and B values for each pixel</span></span>
-<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> r <span class="op">=</span> band<span class="op">.</span><span class="fu">where</span>(band<span class="op">.</span><span class="fu">eq</span>(<span class="dv">0</span>)<span class="op">,</span> <span class="dv">0</span>)<span class="op">.</span><span class="fu">where</span>(band<span class="op">.</span><span class="fu">eq</span>(<span class="dv">1</span>)<span class="op">,</span> <span class="dv">255</span>)<span class="op">.</span><span class="fu">where</span>(band<span class="op">.</span><span class="fu">eq</span>(<span class="dv">2</span>)<span class="op">,</span> <span class="dv">200</span>)<span class="op">.</span><span class="fu">toInt</span>()<span class="op">;</span> </span>
-<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> g <span class="op">=</span> band<span class="op">.</span><span class="fu">where</span>(band<span class="op">.</span><span class="fu">eq</span>(<span class="dv">0</span>)<span class="op">,</span> <span class="dv">128</span>)<span class="op">.</span><span class="fu">where</span>(band<span class="op">.</span><span class="fu">eq</span>(<span class="dv">1</span>)<span class="op">,</span> <span class="dv">255</span>)<span class="op">.</span><span class="fu">where</span>(band<span class="op">.</span><span class="fu">eq</span>(<span class="dv">2</span>)<span class="op">,</span> <span class="dv">200</span>)<span class="op">.</span><span class="fu">toInt</span>()<span class="op">;</span> </span>
-<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> b <span class="op">=</span> band<span class="op">.</span><span class="fu">where</span>(band<span class="op">.</span><span class="fu">eq</span>(<span class="dv">0</span>)<span class="op">,</span> <span class="dv">0</span>)<span class="op">.</span><span class="fu">where</span>(band<span class="op">.</span><span class="fu">eq</span>(<span class="dv">1</span>)<span class="op">,</span> <span class="dv">0</span>)<span class="op">.</span><span class="fu">where</span>(band<span class="op">.</span><span class="fu">eq</span>(<span class="dv">2</span>)<span class="op">,</span> <span class="dv">200</span>)<span class="op">.</span><span class="fu">toInt</span>()<span class="op">;</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Defines a function to map a single-band image to an RGB color</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>  <span class="kw">function</span> <span class="fu">mapToRgb</span>(image) {</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Get a single band image</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> band <span class="op">=</span> image<span class="op">.</span><span class="fu">select</span>([<span class="dv">0</span>])<span class="op">;</span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Creates a new image with the same R, G, and B values for each pixel</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> r <span class="op">=</span> band<span class="op">.</span><span class="fu">where</span>(band<span class="op">.</span><span class="fu">eq</span>(<span class="dv">0</span>)<span class="op">,</span> <span class="dv">0</span>)<span class="op">.</span><span class="fu">where</span>(band<span class="op">.</span><span class="fu">eq</span>(<span class="dv">1</span>)<span class="op">,</span> <span class="dv">255</span>)<span class="op">.</span><span class="fu">where</span>(band<span class="op">.</span><span class="fu">eq</span>(<span class="dv">2</span>)<span class="op">,</span> <span class="dv">200</span>)<span class="op">.</span><span class="fu">toInt</span>()<span class="op">;</span> </span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> g <span class="op">=</span> band<span class="op">.</span><span class="fu">where</span>(band<span class="op">.</span><span class="fu">eq</span>(<span class="dv">0</span>)<span class="op">,</span> <span class="dv">128</span>)<span class="op">.</span><span class="fu">where</span>(band<span class="op">.</span><span class="fu">eq</span>(<span class="dv">1</span>)<span class="op">,</span> <span class="dv">255</span>)<span class="op">.</span><span class="fu">where</span>(band<span class="op">.</span><span class="fu">eq</span>(<span class="dv">2</span>)<span class="op">,</span> <span class="dv">200</span>)<span class="op">.</span><span class="fu">toInt</span>()<span class="op">;</span> </span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> b <span class="op">=</span> band<span class="op">.</span><span class="fu">where</span>(band<span class="op">.</span><span class="fu">eq</span>(<span class="dv">0</span>)<span class="op">,</span> <span class="dv">0</span>)<span class="op">.</span><span class="fu">where</span>(band<span class="op">.</span><span class="fu">eq</span>(<span class="dv">1</span>)<span class="op">,</span> <span class="dv">0</span>)<span class="op">.</span><span class="fu">where</span>(band<span class="op">.</span><span class="fu">eq</span>(<span class="dv">2</span>)<span class="op">,</span> <span class="dv">200</span>)<span class="op">.</span><span class="fu">toInt</span>()<span class="op">;</span></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Returns a new image containing the RGB band</span></span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ee<span class="op">.</span><span class="at">Image</span><span class="op">.</span><span class="fu">cat</span>(r<span class="op">,</span> g<span class="op">,</span> b)<span class="op">.</span><span class="fu">rename</span>([<span class="st">'red'</span><span class="op">,</span> <span class="st">'green'</span><span class="op">,</span> <span class="st">'blue'</span>])<span class="op">.</span><span class="fu">toFloat</span>()<span class="op">;</span></span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>   <span class="co">// Returns a new image containing the RGB band</span></span>
-<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ee<span class="op">.</span><span class="at">Image</span><span class="op">.</span><span class="fu">cat</span>(r<span class="op">,</span> g<span class="op">,</span> b)<span class="op">.</span><span class="fu">rename</span>([<span class="st">'red'</span><span class="op">,</span> <span class="st">'green'</span><span class="op">,</span> <span class="st">'blue'</span>])<span class="op">.</span><span class="fu">toFloat</span>()<span class="op">;</span></span>
-<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Map each image to an RGB color</span></span>
-<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> rgbImgCol <span class="op">=</span> imgCol<span class="op">.</span><span class="fu">map</span>(mapToRgb)<span class="op">;</span></span>
-<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a> <span class="co">// GIF parameters</span></span>
-<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> params <span class="op">=</span> {</span>
-<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>    <span class="dt">crs</span><span class="op">:</span> <span class="st">'EPSG:3857'</span><span class="op">,</span></span>
-<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>    <span class="dt">framesPerSecond</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span></span>
-<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>    <span class="dt">region</span><span class="op">:</span> roi<span class="op">.</span><span class="fu">geometry</span>()<span class="op">.</span><span class="fu">transform</span>(<span class="st">'EPSG:3857'</span><span class="op">,</span> <span class="dv">1</span>)<span class="op">,</span> <span class="co">// Use the converted region</span></span>
-<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a>    <span class="dt">min</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span></span>
-<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>    <span class="dt">max</span><span class="op">:</span> <span class="dv">255</span><span class="op">,</span></span>
-<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a>    <span class="dt">bands</span><span class="op">:</span> [<span class="st">'red'</span><span class="op">,</span> <span class="st">'green'</span><span class="op">,</span> <span class="st">'blue'</span>]<span class="op">,</span></span>
-<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a>    <span class="dt">dimensions</span><span class="op">:</span> <span class="dv">512</span><span class="op">,</span></span>
-<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
-<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Add the GIF to the panel</span></span>
-<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a>  sidebarPanel<span class="op">.</span><span class="fu">add</span>(ui<span class="op">.</span><span class="fu">Thumbnail</span>(rgbImgCol<span class="op">,</span> params))<span class="op">;</span></span>
-<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Create a tag</span></span>
-<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> label <span class="op">=</span> ui<span class="op">.</span><span class="fu">Label</span>(<span class="st">'Download the GIF of "Changing Land Conditions in Conflict".'</span>)<span class="op">;</span></span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Map each image to an RGB color</span></span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> rgbImgCol <span class="op">=</span> imgCol<span class="op">.</span><span class="fu">map</span>(mapToRgb)<span class="op">;</span></span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>  <span class="co">// GIF parameters</span></span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> params <span class="op">=</span> {</span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>    <span class="dt">crs</span><span class="op">:</span> <span class="st">'EPSG:3857'</span><span class="op">,</span></span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>    <span class="dt">framesPerSecond</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span></span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>    <span class="dt">region</span><span class="op">:</span> roi<span class="op">.</span><span class="fu">geometry</span>()<span class="op">.</span><span class="fu">transform</span>(<span class="st">'EPSG:3857'</span><span class="op">,</span> <span class="dv">1</span>)<span class="op">,</span> <span class="co">// Use the converted region</span></span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>    <span class="dt">min</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>    <span class="dt">max</span><span class="op">:</span> <span class="dv">255</span><span class="op">,</span></span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>    <span class="dt">bands</span><span class="op">:</span> [<span class="st">'red'</span><span class="op">,</span> <span class="st">'green'</span><span class="op">,</span> <span class="st">'blue'</span>]<span class="op">,</span></span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>    <span class="dt">dimensions</span><span class="op">:</span> <span class="dv">512</span><span class="op">,</span></span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Add the GIF to the panel</span></span>
+<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a>  sidebarPanel<span class="op">.</span><span class="fu">add</span>(ui<span class="op">.</span><span class="fu">Thumbnail</span>(rgbImgCol<span class="op">,</span> params))<span class="op">;</span></span>
+<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Create a tag</span></span>
+<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> label <span class="op">=</span> ui<span class="op">.</span><span class="fu">Label</span>(<span class="st">'Download the GIF of "Changing Land Conditions in Conflict".'</span>)<span class="op">;</span></span>
+<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Set the URL of the tag to make it a hyperlink</span></span>
+<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a>  label<span class="op">.</span><span class="fu">setUrl</span>(rgbImgCol<span class="op">.</span><span class="fu">getVideoThumbURL</span>(params))<span class="op">;</span></span>
 <span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Set the URL of the tag to make it a hyperlink</span></span>
-<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a>  label<span class="op">.</span><span class="fu">setUrl</span>(rgbImgCol<span class="op">.</span><span class="fu">getVideoThumbURL</span>(params))<span class="op">;</span></span>
+<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a>  sidebarPanel<span class="op">.</span><span class="fu">add</span>(label)<span class="op">;</span></span>
+<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a>  sidebarPanel<span class="op">.</span><span class="fu">add</span>(label)<span class="op">;</span></span>
-<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a><span class="fu">main</span>()<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a><span class="fu">main</span>()<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Create a tag and set the tag’s hyperlink to download the GIF.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Create a label</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> label <span class="op">=</span> ui<span class="op">.</span><span class="fu">Label</span>(<span class="st">'Download the GIF of "Changing Land Conditions in Conflict".'</span>)<span class="op">;</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Set the URL of the tag to make it a hyperlink</span></span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  label<span class="op">.</span><span class="fu">setUrl</span>(rgbImgCol<span class="op">.</span><span class="fu">getVideoThumbURL</span>(params))<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>You can include images:</p>
+<p>The image output should look like this:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/conflict.gif" class="img-fluid figure-img"></p>
 <figcaption class="figure-caption">Changing Land conditions in Conflict, 2023.11-2024.3</figcaption>
 </figure>
 </div>
-<p>and math: <span class="math display">\[ \Large t = {\frac{\overline{x_1}-\overline{x_2}} {\sqrt{\frac{s^2_1}{n_1} + \frac{s^2_2}{n_2}}}} \]</span></p>
 
 
 </section>
