@@ -67,9 +67,10 @@ var dates = [
   //{year: 2024, month: '03', pathSuffix: '2024_03'}
 ];
 ```
-2.而这段代码是用于定义可视化参数，min和max代表着数据的最小和最大值，bands则指定了要在图像中显示的波段，在这里使用了三个波段，
-分别是'B4'、'B3'、'B2'，这些波段对应于红、绿、蓝波段，通常用于创建彩色图像。注释部分提供了另一个 bands 的取值，是使用近红外、红、绿波段的假彩色合成。
-这种合成通常用于突出植被、土地和水体等特定地物的特征。opacity则表示了图像的透明度。
+2.This code segment defines visualization parameters. min and max represent the minimum and maximum values of the data, while bands specify the bands to be displayed in the image. 
+Here, three bands are used: 'B4', 'B3', and 'B2', corresponding to the red, green, and blue bands, typically employed for creating color images.
+The commented section provides another set of bands values, which comprise near-infrared, red, and green bands for false-color synthesis. This synthesis method is often utilized to emphasize features of specific objects such as vegetation, land, and water bodies.
+opacity indicates the transparency of the image.
 ```js
 // 定义可视化参数
 var s_rgb = {
@@ -80,11 +81,10 @@ var s_rgb = {
   opacity:1
 };
 ```
-3.这段代码运用 GEE JavaScript API 处理 了Sentinel-2 影像数据，并在地图上完成了可视化，
-代码创建了一个 Sentinel-2 表面反射（Surface Reflectance）影像的 ImageCollection。
-然后，使用 filter() 方法选择了时间范围内云量小于 15% 的影像，并选择了指定的波段集合。
-最后，使用 median() 方法计算了时间范围内影像的中位数，得到一个合成影像。
-代码同时计算了归一化水体指数（NDWI），并将 NDWI 小于 0.3 的像素设置为无效（掩膜），从合成影像中选择了指定的波段并将处理后的影像添加到地图中进行可视化。
+3.This code segment utilizes the GEE JavaScript API to process Sentinel-2 satellite imagery data and visualize it on a map. 
+The code creates an ImageCollection of Sentinel-2 surface reflectance images. Then, it filters the collection to select images with cloud cover less than 15% within the specified time range and chooses the specified bands. 
+Finally, it calculates the median of the images within the time range to produce a composite image.
+Additionally, the code computes the Normalized Difference Water Index (NDWI) and masks out pixels with NDWI values less than 0.3 from the composite image. It selects the specified bands from the processed image and adds it to the map for visualization.
 ```js
 dates.forEach(function(dateRange) {
   var start = dateRange.year + '-' + dateRange.month + '-01';
@@ -126,7 +126,7 @@ dates.forEach(function(dateRange) {
     points: 1000 // 假设为城市类的数量
   }).map(function(feat) { return feat.set('class', 2); });
 ```
-6.这行代码的作用是将三类样本点集合合并成一个样本点集合，并为每个样本点添加了一个随机列，用于后续的样本操作。
+6.这行代码的作用是将三类样本点集合合并成一个样本点集合，并为每个样本点添加了一个随机列，用于后续的影像剪裁等操作。
 ```js
   // 合并所有样本点，并添加随机列以后续分割
   var sample = vegetationPoints.merge(barePoints).merge(urbanPoints).randomColumn();
