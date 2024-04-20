@@ -50,7 +50,7 @@ Use this section to explain how your application works using code blocks and tex
 
 
 ### Preprocessing
-1.We first represent the meanings of the data stored in the object in the code: 
+1. We first represent the meanings of the data stored in the object in the code: 
 year, month, and pathSuffix are used to describe the starting date, month number, and path suffix respectively for each month.
 ```js
 // 定义月份的开始和结束日期
@@ -67,10 +67,8 @@ var dates = [
   //{year: 2024, month: '03', pathSuffix: '2024_03'}
 ];
 ```
-2.This code segment defines visualization parameters. min and max represent the minimum and maximum values of the data, while bands specify the bands to be displayed in the image. 
+2. Then we define the  visualization parameters. min and max represent the minimum and maximum values of the data, while bands specify the bands to be displayed in the image. 
 Here, three bands are used: 'B4', 'B3', and 'B2', corresponding to the red, green, and blue bands, typically employed for creating color images.
-The commented section provides another set of bands values, which comprise near-infrared, red, and green bands for false-color synthesis. This synthesis method is often utilized to emphasize features of specific objects such as vegetation, land, and water bodies.
-opacity indicates the transparency of the image.
 ```js
 // 定义可视化参数
 var s_rgb = {
@@ -81,7 +79,7 @@ var s_rgb = {
   opacity:1
 };
 ```
-3.This code segment utilizes the GEE JavaScript API to process Sentinel-2 satellite imagery data and visualize it on a map. 
+3. This code segment utilizes the GEE  API to process Sentinel-2 satellite imagery data and visualize it on a map. 
 The code creates an ImageCollection of Sentinel-2 surface reflectance images. Then, it filters the collection to select images with cloud cover less than 15% within the specified time range and chooses the specified bands. 
 Finally, it calculates the median of the images within the time range to produce a composite image.
 Additionally, the code computes the Normalized Difference Water Index (NDWI) and masks out pixels with NDWI values less than 0.3 from the composite image. It selects the specified bands from the processed image and adds it to the map for visualization.
@@ -101,14 +99,15 @@ dates.forEach(function(dateRange) {
 
   Map.addLayer(image.clip(aoi), s_rgb, 'Sentinel ' + dateRange.year + '-' + dateRange.month);
 ```
-4.这部分代码加载了一个特定月份的地物类型 FeatureCollection，用于指定特定月份的数据集路径，存储在变量 landTypes 中。
+4. This portion of the code loads a FeatureCollection of land types for a specific month. 
+It specifies the dataset path for the specific month and stores it in the variable landTypes.
 ```js
   // 加载特定月份的FeatureCollection
   var basePath = 'projects/ucfnqma/assets/Gaza/land_types_' + dateRange.pathSuffix;
   var landTypes = ee.FeatureCollection(basePath);
 ```
-5.下一段代码用于在 Google Earth Engine 中分别生成植被类，裸土类和城市类的样本点集合，并为每个样本点添加一个类别标签，
-以便进行地物分类或监督学习等任务。
+5. The next segment of code is used to generate sample point collections for vegetation, bare soil, and urban classes respectively in Google Earth Engine.
+ It adds a class label to each sample point to facilitate tasks such as land cover classification or supervised learning.
 ```js
   // 为每种landType生成样本点
   var vegetationPoints = ee.FeatureCollection.randomPoints({
@@ -126,7 +125,8 @@ dates.forEach(function(dateRange) {
     points: 1000 // 假设为城市类的数量
   }).map(function(feat) { return feat.set('class', 2); });
 ```
-6.这行代码的作用是将三类样本点集合合并成一个样本点集合，并为每个样本点添加了一个随机列，用于后续的影像剪裁等操作。
+6. This line of code merges three classes of sample point collections into one, 
+and adds a random column to each sample point for subsequent operations such as image clipping.。
 ```js
   // 合并所有样本点，并添加随机列以后续分割
   var sample = vegetationPoints.merge(barePoints).merge(urbanPoints).randomColumn();
