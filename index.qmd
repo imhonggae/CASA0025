@@ -76,7 +76,7 @@ var s_rgb = {
   opacity:1
 };
 ```
-
+```js
 dates.forEach(function(dateRange) {
   var start = dateRange.year + '-' + dateRange.month + '-01';
   var end = new Date(dateRange.year, dateRange.month, 0).toISOString().split('T')[0]; // Auto-adjust month length
@@ -91,7 +91,7 @@ dates.forEach(function(dateRange) {
   
 
   Map.addLayer(image.clip(aoi), s_rgb, 'Sentinel ' + dateRange.year + '-' + dateRange.month);
-
+```
 
   // 加载特定月份的FeatureCollection
   var basePath = 'projects/ucfnqma/assets/Gaza/land_types_' + dateRange.pathSuffix;
