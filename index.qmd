@@ -30,6 +30,7 @@ There are four main steps in the process of creating the User Interface (UI):
   2.The vegetation area before and after the conflict was calculated, and the change of vegetation area before and after the war was shown using line plots.
   3.Draw all the month layers as GIFs.
   4.Click the GIF download button to complete the GIF download.
+  5.Add the legends to the map
 
 ## The Application 
 
@@ -53,14 +54,55 @@ var aoi = ee.Geometry.Point(35.51898, 33.90153).buffer(3000);
 ```
 
 
-#Interface
+##Interface
+# 1. Select the relevant year to display the appropriate layer
 Firstly,  Create a map instance and Set the center point and zoom level of the map
+
 ```js
-// Create a map instance
 var map1 = ui.Map();
-// Set the center point and zoom level of the map
+
 map1.centerObject(aoi,10.5);
 ```
+![Pixelwise T-Test, 2018](images/beirut_change_2020.jpg)
+
+Then Create a selection box where the user can select 11, 12, 1, 2, 3 and add response logic when options change. After that call the function to update the displayed layer.
+```js
+var imageCollection = classificationCollection.map(function(img){
+  return img.clip(aoi);
+});
+// Create a selection box where the user can select 11, 12, 1, 2, 3
+var select = ui.Select({
+  items: ['2022-11', '2022-12', '2023-01', '2023-02', '2023-03','2023-11', '2023-12', '2024-01', '2024-02', '2024-03'],
+  value: '2022-11',  //Default selection '2022-11'
+  placeholder: 'Choose a number',
+  onChange: function(value) {
+    // Here you can add the response logic when the options change
+    updateMaps(value); // Call the function to update the map
+  }
+});
+
+// Create a label
+var label = ui.Label('Please select a time', {margin: '10px 0px 5px 0px'});
+
+// Create a panel where you can place the selection boxes and labels
+var controlPanel = ui.Panel({
+  widgets: [label, select],
+  style: {width: '300px', padding: '10px'} , // Positioning and styling
+  layout: ui.Panel.Layout.flow('horizontal')  // Set to horizontal layout
+});
+
+// Add the map to the root panel
+ui.root.widgets().reset([map1]);
+
+
+// Set the style of the map
+map1.style().set('width', '65%');
+```
+![Pixelwise T-Test, 2018](images/beirut_change_2020.jpg)
+
+
+
+
 
 You can include images:
 
