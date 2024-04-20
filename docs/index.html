@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.553">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -80,7 +80,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -89,6 +95,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -97,6 +104,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -110,6 +144,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     
 <!-- main -->
 <main class="content page-columns page-full" id="quarto-document-content">
+
 
 
 
@@ -137,13 +172,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="interface" class="level3">
 <h3 class="anchored" data-anchor-id="interface">Interface</h3>
 <p>How does your application’s interface work to address the needs of your end user?</p>
+<p>There are four main steps in the process of creating the User Interface (UI):</p>
+<p>1.Use the year selector to select the relevant year to display the appropriate layer. 2.Add the legends to the map. 3.The vegetation area before and after the conflict was calculated, and the change of vegetation area before and after the war was shown using line plots. 4.Draw all the month layers as GIFs. 5.Click the GIF download button to complete the GIF download.</p>
 </section>
 </section>
 <section id="the-application" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="the-application">The Application</h2>
 <p>Replace the link below with the link to your application.</p>
 <div class="column-page">
-<iframe src="https://ee-hongkairen81.projects.earthengine.app/view/casa-final-course" width="100%" height="700px">
+<iframe src="https://bigdata0025.projects.earthengine.app/view/conflict" width="100%" height="700px">
 </iframe>
 </div>
 </section>
@@ -155,11 +192,336 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">setOptions</span>(<span class="st">"satellite"</span>)<span class="op">;</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> aoi <span class="op">=</span> ee<span class="op">.</span><span class="at">Geometry</span><span class="op">.</span><span class="fu">Point</span>(<span class="fl">35.51898</span><span class="op">,</span> <span class="fl">33.90153</span>)<span class="op">.</span><span class="fu">buffer</span>(<span class="dv">3000</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>##Interface #1. Select the relevant year to display the appropriate layer Firstly, Create a map instance and Set the center point and zoom level of the map</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> map1 <span class="op">=</span> ui<span class="op">.</span><span class="fu">Map</span>()<span class="op">;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>map1<span class="op">.</span><span class="fu">centerObject</span>(aoi<span class="op">,</span><span class="fl">10.5</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/beirut_change_2020.jpg" class="img-fluid figure-img"></p>
+<figcaption>Pixelwise T-Test, 2018</figcaption>
+</figure>
+</div>
+<p>Then Create a selection box where the user can select 11, 12, 1, 2, 3 and add response logic when options change. After that call the function to update the displayed layer.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> imageCollection <span class="op">=</span> classificationCollection<span class="op">.</span><span class="fu">map</span>(<span class="kw">function</span>(img){</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> img<span class="op">.</span><span class="fu">clip</span>(aoi)<span class="op">;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Create a selection box where the user can select 11, 12, 1, 2, 3</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> select <span class="op">=</span> ui<span class="op">.</span><span class="fu">Select</span>({</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">items</span><span class="op">:</span> [<span class="st">'2022-11'</span><span class="op">,</span> <span class="st">'2022-12'</span><span class="op">,</span> <span class="st">'2023-01'</span><span class="op">,</span> <span class="st">'2023-02'</span><span class="op">,</span> <span class="st">'2023-03'</span><span class="op">,</span><span class="st">'2023-11'</span><span class="op">,</span> <span class="st">'2023-12'</span><span class="op">,</span> <span class="st">'2024-01'</span><span class="op">,</span> <span class="st">'2024-02'</span><span class="op">,</span> <span class="st">'2024-03'</span>]<span class="op">,</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">value</span><span class="op">:</span> <span class="st">'2022-11'</span><span class="op">,</span>  <span class="co">//Default selection '2022-11'</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">placeholder</span><span class="op">:</span> <span class="st">'Choose a number'</span><span class="op">,</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">onChange</span><span class="op">:</span> <span class="kw">function</span>(value) {</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Here you can add the response logic when the options change</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">updateMaps</span>(value)<span class="op">;</span> <span class="co">// Call the function to update the map</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">// Create a label</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> label <span class="op">=</span> ui<span class="op">.</span><span class="fu">Label</span>(<span class="st">'Please select a time'</span><span class="op">,</span> {<span class="dt">margin</span><span class="op">:</span> <span class="st">'10px 0px 5px 0px'</span>})<span class="op">;</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">// Create a panel where you can place the selection boxes and labels</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> controlPanel <span class="op">=</span> ui<span class="op">.</span><span class="fu">Panel</span>({</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="dt">widgets</span><span class="op">:</span> [label<span class="op">,</span> select]<span class="op">,</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="dt">style</span><span class="op">:</span> {<span class="dt">width</span><span class="op">:</span> <span class="st">'300px'</span><span class="op">,</span> <span class="dt">padding</span><span class="op">:</span> <span class="st">'10px'</span>} <span class="op">,</span> <span class="co">// Positioning and styling</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="dt">layout</span><span class="op">:</span> ui<span class="op">.</span><span class="at">Panel</span><span class="op">.</span><span class="at">Layout</span><span class="op">.</span><span class="fu">flow</span>(<span class="st">'horizontal'</span>)  <span class="co">// Set to horizontal layout</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co">// Add the map to the root panel</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>ui<span class="op">.</span><span class="at">root</span><span class="op">.</span><span class="fu">widgets</span>()<span class="op">.</span><span class="fu">reset</span>([map1])<span class="op">;</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="co">// Set the style of the map</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>map1<span class="op">.</span><span class="fu">style</span>()<span class="op">.</span><span class="fu">set</span>(<span class="st">'width'</span><span class="op">,</span> <span class="st">'65%'</span>)<span class="op">;</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="co">// Create a panel to place the control panel</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> sidebarPanel <span class="op">=</span> ui<span class="op">.</span><span class="fu">Panel</span>({</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>  <span class="dt">widgets</span><span class="op">:</span> [controlPanel]<span class="op">,</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>  <span class="dt">style</span><span class="op">:</span> {<span class="dt">position</span><span class="op">:</span> <span class="st">'top-right'</span><span class="op">,</span> <span class="dt">width</span><span class="op">:</span> <span class="st">'120px'</span><span class="op">,</span><span class="dt">height</span><span class="op">:</span> <span class="st">'300px'</span><span class="op">,</span>  <span class="dt">margin</span><span class="op">:</span> <span class="st">'0px 10px 0px 0px'</span>}</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="co">// Adds the sidebar panel to the root panel</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>ui<span class="op">.</span><span class="at">root</span><span class="op">.</span><span class="fu">add</span>(sidebarPanel)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/beirut_change_2020.jpg" class="img-fluid figure-img"></p>
+<figcaption>Pixelwise T-Test, 2018</figcaption>
+</figure>
+</div>
+<p>This is the detail of update function. In this function, we first converts a collection of images to a list, then determine the index of the image by month</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Converts a collection of images to a list</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> imageList <span class="op">=</span> imageCollection<span class="op">.</span><span class="fu">toList</span>(imageCollection<span class="op">.</span><span class="fu">size</span>())<span class="op">;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">updateMaps</span>(month) {</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Determine the index of the image by month</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> index1<span class="op">;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">switch</span> (month) {</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="st">'2022-11'</span><span class="op">:</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>      index1 <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>      <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="st">'2022-12'</span><span class="op">:</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>      index1 <span class="op">=</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>      <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="st">'2023-01'</span><span class="op">:</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>      index1 <span class="op">=</span> <span class="dv">2</span><span class="op">;</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>      <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="st">'2023-02'</span><span class="op">:</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>      index1 <span class="op">=</span> <span class="dv">3</span><span class="op">;</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>      <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="st">'2023-03'</span><span class="op">:</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>      index1 <span class="op">=</span> <span class="dv">4</span><span class="op">;</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>      <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="st">'2023-11'</span><span class="op">:</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>      index1 <span class="op">=</span> <span class="dv">5</span><span class="op">;</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>      <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="st">'2023-12'</span><span class="op">:</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>      index1 <span class="op">=</span> <span class="dv">6</span><span class="op">;</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>      <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="st">'2024-01'</span><span class="op">:</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>      index1 <span class="op">=</span> <span class="dv">7</span><span class="op">;</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>      <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="st">'2024-02'</span><span class="op">:</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>      index2 <span class="op">=</span> <span class="dv">8</span><span class="op">;</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>      <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="st">'2024-03'</span><span class="op">:</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>      index1 <span class="op">=</span> <span class="dv">9</span><span class="op">;</span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>      <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">default</span><span class="op">:</span></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>      <span class="bu">console</span><span class="op">.</span><span class="fu">error</span>(<span class="st">'Invalid month selected:'</span><span class="op">,</span> month)<span class="op">;</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Get the image by index</span></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> image1 <span class="op">=</span> ee<span class="op">.</span><span class="fu">Image</span>(imageList<span class="op">.</span><span class="fu">get</span>(index1))<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>#2. Add the legends to the map First define the color list and description list, then create the legend style and legend panel. Add legend items in a loop. It contains description labels and color blocks, adds legend items to the inside version of the diagram, and adds legends to the lower left corner of the map.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pdateMaps</span>(<span class="st">'2022-11'</span>)<span class="op">;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Define the color list and description list</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> palette <span class="op">=</span> [<span class="st">'green'</span><span class="op">,</span> <span class="st">'yellow'</span><span class="op">,</span> <span class="st">'grey'</span>]<span class="op">;</span> <span class="co">// Suppose this is your list of colors</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> names <span class="op">=</span> [<span class="st">'vegetation'</span><span class="op">,</span> <span class="st">'bare'</span><span class="op">,</span> <span class="st">'urban'</span>]<span class="op">;</span> <span class="co">// A description corresponding to the color</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Create a style for the legend</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> legendStyle <span class="op">=</span> {</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">margin</span><span class="op">:</span> <span class="st">'0px 8px 15px 0px'</span><span class="op">,</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">padding</span><span class="op">:</span> <span class="st">'0px 5px 5px 0px'</span><span class="op">,</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">position</span><span class="op">:</span> <span class="st">'bottom-left'</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">// Create the panel of legend</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> legendPanel <span class="op">=</span> ui<span class="op">.</span><span class="fu">Panel</span>({</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="dt">widgets</span><span class="op">:</span> []<span class="op">,</span> <span class="co">// Used to add legend entries</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="dt">style</span><span class="op">:</span> legendStyle</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">// Add a legend entry</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> palette<span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> legendItem <span class="op">=</span> ui<span class="op">.</span><span class="fu">Panel</span>({</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="dt">layout</span><span class="op">:</span> ui<span class="op">.</span><span class="at">Panel</span><span class="op">.</span><span class="at">Layout</span><span class="op">.</span><span class="fu">Flow</span>(<span class="st">'horizontal'</span>)<span class="op">,</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="dt">style</span><span class="op">:</span> {<span class="dt">margin</span><span class="op">:</span> <span class="st">'0px 10px'</span>}</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>  <span class="co">// create color block</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> colorBlock <span class="op">=</span> ui<span class="op">.</span><span class="fu">Label</span>({</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    <span class="dt">style</span><span class="op">:</span> {</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>      <span class="dt">backgroundColor</span><span class="op">:</span> palette[i]<span class="op">,</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>      <span class="dt">padding</span><span class="op">:</span> <span class="st">'5px'</span><span class="op">,</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>      <span class="dt">margin</span><span class="op">:</span> <span class="st">'0 0 4px 0'</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>  <span class="co">// create desctription label</span></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> description <span class="op">=</span> ui<span class="op">.</span><span class="fu">Label</span>({</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>    <span class="dt">value</span><span class="op">:</span> names[i]<span class="op">,</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>    <span class="dt">style</span><span class="op">:</span> {<span class="dt">margin</span><span class="op">:</span> <span class="st">'0 0 4px 8px'</span>}</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>  legendItem<span class="op">.</span><span class="fu">add</span>(colorBlock)<span class="op">;</span></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>  legendItem<span class="op">.</span><span class="fu">add</span>(description)<span class="op">;</span></span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Adds a legend item to the Legend panel</span></span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>  legendPanel<span class="op">.</span><span class="fu">add</span>(legendItem)<span class="op">;</span></span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a><span class="co">// Add the legend to the bottom left corner of the map</span></span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>map1<span class="op">.</span><span class="fu">add</span>(legendPanel)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/beirut_change_2020.jpg" class="img-fluid figure-img"></p>
+<figcaption>Pixelwise T-Test, 2018</figcaption>
+</figure>
+</div>
+<p>#3.The vegetation area before and after the conflict was calculated, and the change of vegetation area before and after the war was shown using line plots.</p>
+<p>First calculate the vegetation area of each layer</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> aoi <span class="op">=</span> ee<span class="op">.</span><span class="fu">FeatureCollection</span>(<span class="st">'users/liujingyue01/Gaza'</span>)<span class="op">;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> imageCollection<span class="op">=</span>ee<span class="op">.</span><span class="fu">ImageCollection</span>(<span class="st">'projects/ee-guo112591/assets/GAZA'</span>)<span class="op">;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(imageCollection)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">// 计算vegetation面积的函数</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">calculateVegetationArea</span>(image) {</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> vegetationArea <span class="op">=</span> image<span class="op">.</span><span class="fu">select</span>(<span class="st">'classification'</span>)<span class="op">.</span><span class="fu">eq</span>(<span class="dv">0</span>)<span class="op">.</span><span class="fu">multiply</span>(ee<span class="op">.</span><span class="at">Image</span><span class="op">.</span><span class="fu">pixelArea</span>())<span class="op">.</span><span class="fu">reduceRegion</span>({</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">reducer</span><span class="op">:</span> ee<span class="op">.</span><span class="at">Reducer</span><span class="op">.</span><span class="fu">sum</span>()<span class="op">,</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">geometry</span><span class="op">:</span> aoi<span class="op">,</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">scale</span><span class="op">:</span> <span class="dv">30</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  })<span class="op">.</span><span class="fu">get</span>(<span class="st">'classification'</span>)<span class="op">;</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> ee<span class="op">.</span><span class="fu">Feature</span>(<span class="kw">null</span><span class="op">,</span> {<span class="st">'date'</span><span class="op">:</span> image<span class="op">.</span><span class="fu">get</span>(<span class="st">'date'</span>)<span class="op">,</span> <span class="st">'vegetationArea'</span><span class="op">:</span> vegetationArea})<span class="op">;</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co">// 应用函数到imageCollection中的每个Image</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> vegetationAreas <span class="op">=</span> imageCollection<span class="op">.</span><span class="fu">map</span>(calculateVegetationArea)<span class="op">.</span><span class="fu">sort</span>(<span class="st">'date'</span>)<span class="op">;</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="co">// 将结果转换为列表</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> vegetationAreaList <span class="op">=</span> vegetationAreas<span class="op">.</span><span class="fu">toList</span>(vegetationAreas<span class="op">.</span><span class="fu">size</span>())<span class="op">;</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(vegetationAreaList)</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> firstFive <span class="op">=</span> ee<span class="op">.</span><span class="at">List</span><span class="op">.</span><span class="fu">sequence</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">9</span>)<span class="op">.</span><span class="fu">map</span>(<span class="kw">function</span>(i) { <span class="cf">return</span> ee<span class="op">.</span><span class="fu">Feature</span>(vegetationAreaList<span class="op">.</span><span class="fu">get</span>(i))<span class="op">.</span><span class="fu">get</span>(<span class="st">'vegetationArea'</span>)<span class="op">;</span> })<span class="op">;</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a><span class="co">// // 将面积转换为数值</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> firstFiveNumbers <span class="op">=</span> firstFive<span class="op">.</span><span class="fu">map</span>(<span class="kw">function</span>(area) { <span class="cf">return</span> ee<span class="op">.</span><span class="fu">Number</span>(area)<span class="op">;</span> })<span class="op">;</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(firstFiveNumbers)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In order to reduce the time, we manually enter the calculated time above into the code and then generate the line chart. Set two y values in the line chart, respectively before conflict and after conflict</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> firstFiveNumbers <span class="op">=</span> ee<span class="op">.</span><span class="fu">List</span>([ <span class="fl">108.981451</span><span class="op">,</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fl">124.064503</span><span class="op">,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fl">156.647346</span><span class="op">,</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fl">160.888861</span><span class="op">,</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fl">191.688693</span>])<span class="op">;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> lastFiveNumbers <span class="op">=</span> ee<span class="op">.</span><span class="fu">List</span>([<span class="fl">145.504210</span><span class="op">,</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fl">160.795185</span><span class="op">,</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fl">125.786433</span><span class="op">,</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fl">105.063353</span><span class="op">,</span> </span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fl">107.703722</span>])<span class="op">;</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">// 横坐标数据</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> xAxis <span class="op">=</span> [<span class="st">'11'</span><span class="op">,</span> <span class="st">'12'</span><span class="op">,</span> <span class="st">'1'</span><span class="op">,</span> <span class="st">'2'</span><span class="op">,</span> <span class="st">'3'</span>]<span class="op">;</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co">// 创建一个符合Google Visualization API的DataTable格式的数据源</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> chartData <span class="op">=</span> ee<span class="op">.</span><span class="fu">FeatureCollection</span>(xAxis<span class="op">.</span><span class="fu">map</span>(<span class="kw">function</span>(x<span class="op">,</span> index) {</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> ee<span class="op">.</span><span class="fu">Feature</span>(<span class="kw">null</span><span class="op">,</span> {</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">'x'</span><span class="op">:</span> x<span class="op">,</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">'y1'</span><span class="op">:</span> firstFiveNumbers<span class="op">.</span><span class="fu">get</span>(index)<span class="op">,</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">'y2'</span><span class="op">:</span> lastFiveNumbers<span class="op">.</span><span class="fu">get</span>(index)</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>}))<span class="op">;</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="co">// 使用ui.Chart创建折线图</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> lineChart <span class="op">=</span> ui<span class="op">.</span><span class="at">Chart</span><span class="op">.</span><span class="at">feature</span><span class="op">.</span><span class="fu">byFeature</span>({</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>  <span class="dt">features</span><span class="op">:</span> chartData<span class="op">,</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>  <span class="dt">xProperty</span><span class="op">:</span> <span class="st">'x'</span><span class="op">,</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>  <span class="dt">yProperties</span><span class="op">:</span> [<span class="st">'y1'</span><span class="op">,</span> <span class="st">'y2'</span>] <span class="co">// 添加两组y值</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>})<span class="op">.</span><span class="fu">setSeriesNames</span>([<span class="st">'Before the conflict'</span><span class="op">,</span> <span class="st">'After the conflict'</span>]) <span class="co">// 设置系列名称</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">setOptions</span>({</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>    <span class="dt">title</span><span class="op">:</span> <span class="st">'Comparison of areas before and after the conflict'</span><span class="op">,</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    <span class="dt">hAxis</span><span class="op">:</span> {<span class="dt">title</span><span class="op">:</span> <span class="st">'month'</span><span class="op">,</span> <span class="dt">titleTextStyle</span><span class="op">:</span> {<span class="dt">color</span><span class="op">:</span> <span class="st">'red'</span>}}<span class="op">,</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>    <span class="dt">vAxis</span><span class="op">:</span> {<span class="dt">title</span><span class="op">:</span> <span class="st">'vegetation Area'</span><span class="op">,</span> <span class="dt">titleTextStyle</span><span class="op">:</span> {<span class="dt">color</span><span class="op">:</span> <span class="st">'blue'</span>}}<span class="op">,</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>    <span class="dt">legend</span><span class="op">:</span> <span class="st">'right'</span> <span class="co">// 显示图例</span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a><span class="co">// 设置图表的尺寸</span></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> options <span class="op">=</span> {</span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>  <span class="dt">title</span><span class="op">:</span> <span class="st">'Comparison of areas before and after the conflict'</span><span class="op">,</span></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>  <span class="dt">hAxis</span><span class="op">:</span> {<span class="dt">title</span><span class="op">:</span> <span class="st">'month'</span><span class="op">,</span> <span class="dt">titleTextStyle</span><span class="op">:</span> {<span class="dt">color</span><span class="op">:</span> <span class="st">'red'</span>}}<span class="op">,</span></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vAxis</span><span class="op">:</span> {<span class="dt">title</span><span class="op">:</span> <span class="st">'vegetation Area (km^2)'</span><span class="op">,</span> <span class="dt">titleTextStyle</span><span class="op">:</span> {<span class="dt">color</span><span class="op">:</span> <span class="st">'blue'</span>}}<span class="op">,</span></span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>  <span class="dt">legend</span><span class="op">:</span> <span class="st">'right'</span><span class="op">,</span></span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>  <span class="dt">width</span><span class="op">:</span> <span class="dv">400</span><span class="op">,</span> <span class="co">// 设置图表宽度</span></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>  <span class="dt">height</span><span class="op">:</span> <span class="dv">300</span> <span class="co">// 设置图表高度</span></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a><span class="co">// 创建折线图</span></span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> lineChart <span class="op">=</span> ui<span class="op">.</span><span class="at">Chart</span><span class="op">.</span><span class="at">feature</span><span class="op">.</span><span class="fu">byFeature</span>({</span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>  <span class="dt">features</span><span class="op">:</span> chartData<span class="op">,</span></span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>  <span class="dt">xProperty</span><span class="op">:</span> <span class="st">'x'</span><span class="op">,</span></span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>  <span class="dt">yProperties</span><span class="op">:</span> [<span class="st">'y1'</span><span class="op">,</span> <span class="st">'y2'</span>]</span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>})<span class="op">.</span><span class="fu">setSeriesNames</span>([<span class="st">'Before the cnflict'</span><span class="op">,</span> <span class="st">'After the conflict'</span>])<span class="op">.</span><span class="fu">setOptions</span>(options)<span class="op">;</span></span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a><span class="co">// 调整侧边栏面板的样式，以确保有足够的空间显示图表</span></span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>sidebarPanel<span class="op">.</span><span class="fu">style</span>()<span class="op">.</span><span class="fu">set</span>({</span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>  <span class="dt">width</span><span class="op">:</span> <span class="st">'400px'</span><span class="op">,</span> <span class="co">// 设置面板的最小宽度</span></span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>  <span class="dt">height</span><span class="op">:</span> <span class="st">'auto'</span> <span class="co">// 根据内容自动调整高度  </span></span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a><span class="co">// 将折线图添加到侧边栏面板</span></span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>sidebarPanel<span class="op">.</span><span class="fu">add</span>(lineChart)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>#4.Draw all the month layers as GIFs and Click the GIF download button to complete the GIF download.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">//显示动图</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">main</span>() {</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 假设roi已经定义，并且是一个Feature或FeatureCollection</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> roi <span class="op">=</span> aoi<span class="op">;</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 假设imgCol已经定义，并且它包含了10个单波段影像</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> imgCol <span class="op">=</span> classificationCollection<span class="op">.</span><span class="fu">map</span>(<span class="kw">function</span>(image){</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> image<span class="op">.</span><span class="fu">clip</span>(roi)<span class="op">;</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 获取集合中的图像数量</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> count <span class="op">=</span>imgCol<span class="op">.</span><span class="fu">toList</span>(imgCol<span class="op">.</span><span class="fu">size</span>())<span class="op">.</span><span class="fu">length</span>()<span class="op">;</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">// 计算要跳过的图像数量</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> skipCount <span class="op">=</span> <span class="dv">5</span><span class="op">;</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co">// 跳过前面的图像，获取最后五个图像</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> lastFiveImages <span class="op">=</span> classificationCollection<span class="op">.</span><span class="fu">toList</span>(classificationCollection<span class="op">.</span><span class="fu">size</span>())</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">slice</span>(skipCount<span class="op">,</span> count)<span class="op">;</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="co">// 将列表转换回图像集合</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>imgCol <span class="op">=</span> ee<span class="op">.</span><span class="at">ImageCollection</span><span class="op">.</span><span class="fu">fromImages</span>(lastFiveImages)<span class="op">.</span><span class="fu">map</span>(<span class="kw">function</span>(img){</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> img<span class="op">.</span><span class="fu">clip</span>(aoi)</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 定义一个函数来将单波段影像映射到RGB颜色</span></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>  <span class="kw">function</span> <span class="fu">mapToRgb</span>(image) {</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>    <span class="co">// 获取单波段影像</span></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> band <span class="op">=</span> image<span class="op">.</span><span class="fu">select</span>([<span class="dv">0</span>])<span class="op">;</span></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>    <span class="co">// 创建一个新的影像，其中每个像素的R、G、B值都相同</span></span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> r <span class="op">=</span> band<span class="op">.</span><span class="fu">where</span>(band<span class="op">.</span><span class="fu">eq</span>(<span class="dv">0</span>)<span class="op">,</span> <span class="dv">0</span>)<span class="op">.</span><span class="fu">where</span>(band<span class="op">.</span><span class="fu">eq</span>(<span class="dv">1</span>)<span class="op">,</span> <span class="dv">255</span>)<span class="op">.</span><span class="fu">where</span>(band<span class="op">.</span><span class="fu">eq</span>(<span class="dv">2</span>)<span class="op">,</span> <span class="dv">200</span>)<span class="op">.</span><span class="fu">toInt</span>()<span class="op">;</span> </span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> g <span class="op">=</span> band<span class="op">.</span><span class="fu">where</span>(band<span class="op">.</span><span class="fu">eq</span>(<span class="dv">0</span>)<span class="op">,</span> <span class="dv">128</span>)<span class="op">.</span><span class="fu">where</span>(band<span class="op">.</span><span class="fu">eq</span>(<span class="dv">1</span>)<span class="op">,</span> <span class="dv">255</span>)<span class="op">.</span><span class="fu">where</span>(band<span class="op">.</span><span class="fu">eq</span>(<span class="dv">2</span>)<span class="op">,</span> <span class="dv">200</span>)<span class="op">.</span><span class="fu">toInt</span>()<span class="op">;</span> </span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> b <span class="op">=</span> band<span class="op">.</span><span class="fu">where</span>(band<span class="op">.</span><span class="fu">eq</span>(<span class="dv">0</span>)<span class="op">,</span> <span class="dv">0</span>)<span class="op">.</span><span class="fu">where</span>(band<span class="op">.</span><span class="fu">eq</span>(<span class="dv">1</span>)<span class="op">,</span> <span class="dv">0</span>)<span class="op">.</span><span class="fu">where</span>(band<span class="op">.</span><span class="fu">eq</span>(<span class="dv">2</span>)<span class="op">,</span> <span class="dv">200</span>)<span class="op">.</span><span class="fu">toInt</span>()<span class="op">;</span></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>    <span class="co">// // 返回一个新的影像，其中包含RGB波段</span></span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ee<span class="op">.</span><span class="at">Image</span><span class="op">.</span><span class="fu">cat</span>(r<span class="op">,</span> g<span class="op">,</span> b)<span class="op">.</span><span class="fu">rename</span>([<span class="st">'red'</span><span class="op">,</span> <span class="st">'green'</span><span class="op">,</span> <span class="st">'blue'</span>])<span class="op">.</span><span class="fu">toFloat</span>()<span class="op">;</span></span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 将每个影像映射到RGB颜色</span></span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> rgbImgCol <span class="op">=</span> imgCol<span class="op">.</span><span class="fu">map</span>(mapToRgb)<span class="op">;</span></span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 动图参数</span></span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> params <span class="op">=</span> {</span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>    <span class="dt">crs</span><span class="op">:</span> <span class="st">'EPSG:3857'</span><span class="op">,</span></span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>    <span class="dt">framesPerSecond</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span></span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>    <span class="dt">region</span><span class="op">:</span> roi<span class="op">.</span><span class="fu">geometry</span>()<span class="op">.</span><span class="fu">transform</span>(<span class="st">'EPSG:3857'</span><span class="op">,</span> <span class="dv">1</span>)<span class="op">,</span> <span class="co">// 使用转换后的region</span></span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a>    <span class="dt">min</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>    <span class="dt">max</span><span class="op">:</span> <span class="dv">255</span><span class="op">,</span></span>
+<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a>    <span class="dt">bands</span><span class="op">:</span> [<span class="st">'red'</span><span class="op">,</span> <span class="st">'green'</span><span class="op">,</span> <span class="st">'blue'</span>]<span class="op">,</span></span>
+<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a>    <span class="dt">dimensions</span><span class="op">:</span> <span class="dv">512</span><span class="op">,</span></span>
+<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 将动图添加到面板</span></span>
+<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a>  sidebarPanel<span class="op">.</span><span class="fu">add</span>(ui<span class="op">.</span><span class="fu">Thumbnail</span>(rgbImgCol<span class="op">,</span> params))<span class="op">;</span></span>
+<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 创建一个标签</span></span>
+<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> label <span class="op">=</span> ui<span class="op">.</span><span class="fu">Label</span>(<span class="st">'Download the GIF of "Changing Land Conditions in Conflict".'</span>)<span class="op">;</span></span>
+<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 设置标签的 URL，使其成为一个超链接</span></span>
+<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a>  label<span class="op">.</span><span class="fu">setUrl</span>(rgbImgCol<span class="op">.</span><span class="fu">getVideoThumbURL</span>(params))<span class="op">;</span></span>
+<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a>  sidebarPanel<span class="op">.</span><span class="fu">add</span>(label)<span class="op">;</span></span>
+<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a><span class="fu">main</span>()<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Create a tag and set the tag’s hyperlink to download the GIF.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Create a label</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> label <span class="op">=</span> ui<span class="op">.</span><span class="fu">Label</span>(<span class="st">'Download the GIF of "Changing Land Conditions in Conflict".'</span>)<span class="op">;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Set the URL of the tag to make it a hyperlink</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  label<span class="op">.</span><span class="fu">setUrl</span>(rgbImgCol<span class="op">.</span><span class="fu">getVideoThumbURL</span>(params))<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>You can include images:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/beirut_change_2020.jpg" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Pixelwise T-Test, 2018</figcaption>
+<figcaption>Pixelwise T-Test, 2018</figcaption>
 </figure>
 </div>
 <p>and math: <span class="math display">\[ \Large t = {\frac{\overline{x_1}-\overline{x_2}} {\sqrt{\frac{s^2_1}{n_1} + \frac{s^2_2}{n_2}}}} \]</span></p>
@@ -210,6 +572,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       } else {
         el.classList.add('notransition');
       }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
     }
   }
   const toggleColorMode = (alternate) => {
@@ -278,13 +667,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return localAlternateSentinel;
     }
   }
-  let localAlternateSentinel = 'alternate';
+  const darkModeDefault = true;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
   // Dark / light mode switch
   window.quartoToggleColorScheme = () => {
     // Read the current dark / light value 
     let toAlternate = !hasAlternateSentinel();
     toggleColorMode(toAlternate);
     setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
   };
   // Ensure there is a toggle, if there isn't float one in the top right
   if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -363,10 +754,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -376,8 +784,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -389,7 +806,130 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -433,6 +973,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -458,6 +999,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -518,6 +1085,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
+
 
 
 
