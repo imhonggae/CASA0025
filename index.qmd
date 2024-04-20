@@ -27,10 +27,11 @@ How does your application's interface work to address the needs of your end user
 There are four main steps in the process of creating the User Interface (UI):
 
   1.Use the year selector to select the relevant year to display the appropriate layer.
-  2.The vegetation area before and after the conflict was calculated, and the change of vegetation area before and after the war was shown using line plots.
-  3.Draw all the month layers as GIFs.
-  4.Click the GIF download button to complete the GIF download.
-  5.Add the legends to the map
+  2.Add the legends to the map.
+  3.The vegetation area before and after the conflict was calculated, and the change of vegetation area before and after the war was shown using line plots.
+  4.Draw all the month layers as GIFs.
+  5.Click the GIF download button to complete the GIF download.
+
 
 ## The Application 
 
@@ -55,7 +56,7 @@ var aoi = ee.Geometry.Point(35.51898, 33.90153).buffer(3000);
 
 
 ##Interface
-# 1. Select the relevant year to display the appropriate layer
+#1. Select the relevant year to display the appropriate layer
 Firstly,  Create a map instance and Set the center point and zoom level of the map
 
 ```js
@@ -100,11 +101,219 @@ map1.style().set('width', '65%');
 ```
 ![Pixelwise T-Test, 2018](images/beirut_change_2020.jpg)
 
+This is the detail of update function. In this function, we first converts a collection of images to a list, then determine the index of the image by month 
+```js
+// Converts a collection of images to a list
+var imageList = imageCollection.toList(imageCollection.size());
 
+function updateMaps(month) {
+  // Determine the index of the image by month
+  var index1;
+  switch (month) {
+    case '2022-11':
+      index1 = 0;
+      break;
+    case '2022-12':
+      index1 = 1;
+      break;
+    case '2023-01':
+      index1 = 2;
+      break;
+    case '2023-02':
+      index1 = 3;
+      break;
+    case '2023-03':
+      index1 = 4;
+      break;
+    case '2023-11':
+      index1 = 5;
+      break;
+    case '2023-12':
+      index1 = 6;
+      break;
+    case '2024-01':
+      index1 = 7;
+      break;
+    case '2024-02':
+      index2 = 8;
+      break;
+    case '2024-03':
+      index1 = 9;
+      break;
+    default:
+      console.error('Invalid month selected:', month);
+      return;
+  }
+  // Get the image by index
+  var image1 = ee.Image(imageList.get(index1));
+```
+
+
+#2. Add the legends to the map
+First define the color list and description list, then create the legend style and legend panel. Add legend items in a loop. It contains description labels and color blocks, adds legend items to the inside version of the diagram, and adds legends to the lower left corner of the map.
+```js
+pdateMaps('2022-11');
+
+// Define the color list and description list
+var palette = ['green', 'yellow', 'grey']; // Suppose this is your list of colors
+var names = ['vegetation', 'bare', 'urban']; // A description corresponding to the color
+
+// Create a style for the legend
+var legendStyle = {
+  margin: '0px 8px 15px 0px',
+  padding: '0px 5px 5px 0px',
+  position: 'bottom-left'
+};
+
+// Create the panel of legend
+var legendPanel = ui.Panel({
+  widgets: [], // Used to add legend entries
+  style: legendStyle
+});
+
+// Add a legend entry
+for (var i = 0; i < palette.length; i++) {
+  var legendItem = ui.Panel({
+    layout: ui.Panel.Layout.Flow('horizontal'),
+    style: {margin: '0px 10px'}
+  });
+  
+  // create color block
+  var colorBlock = ui.Label({
+    style: {
+      backgroundColor: palette[i],
+      padding: '5px',
+      margin: '0 0 4px 0'
+    }
+  });
+  
+  // create desctription label
+  var description = ui.Label({
+    value: names[i],
+    style: {margin: '0 0 4px 8px'}
+  });
+  
+  legendItem.add(colorBlock);
+  legendItem.add(description);
+  
+  // Adds a legend item to the Legend panel
+  legendPanel.add(legendItem);
+}
+
+// Add the legend to the bottom left corner of the map
+map1.add(legendPanel);
+```
+![Pixelwise T-Test, 2018](images/beirut_change_2020.jpg)
+
+
+#3.The vegetation area before and after the conflict was calculated, and the change of vegetation area before and after the war was shown using line plots.
+
+First calculate the vegetation area of each layer
+```js
+
+var aoi = ee.FeatureCollection('users/liujingyue01/Gaza');
+var imageCollection=ee.ImageCollection('projects/ee-guo112591/assets/GAZA');
+print(imageCollection)
+
+// 计算vegetation面积的函数
+function calculateVegetationArea(image) {
+  var vegetationArea = image.select('classification').eq(0).multiply(ee.Image.pixelArea()).reduceRegion({
+    reducer: ee.Reducer.sum(),
+    geometry: aoi,
+    scale: 30
+  }).get('classification');
+  return ee.Feature(null, {'date': image.get('date'), 'vegetationArea': vegetationArea});
+}
+
+// 应用函数到imageCollection中的每个Image
+var vegetationAreas = imageCollection.map(calculateVegetationArea).sort('date');
+
+// 将结果转换为列表
+var vegetationAreaList = vegetationAreas.toList(vegetationAreas.size());
+
+print(vegetationAreaList)
+
+var firstFive = ee.List.sequence(0, 9).map(function(i) { return ee.Feature(vegetationAreaList.get(i)).get('vegetationArea'); });
+
+// // 将面积转换为数值
+var firstFiveNumbers = firstFive.map(function(area) { return ee.Number(area); });
+print(firstFiveNumbers)
+```
+In order to reduce the time, we manually enter the calculated time above into the code and then generate the line chart
+```js
+var firstFiveNumbers = ee.List([ 108.981451,
+  124.064503,
+  156.647346,
+  160.888861,
+  191.688693]);
+var lastFiveNumbers = ee.List([145.504210,
+  160.795185,
+  125.786433,
+  105.063353, 
+  107.703722]);
+
+// 横坐标数据
+var xAxis = ['11', '12', '1', '2', '3'];
+
+// 创建一个符合Google Visualization API的DataTable格式的数据源
+var chartData = ee.FeatureCollection(xAxis.map(function(x, index) {
+  return ee.Feature(null, {
+    'x': x,
+    'y1': firstFiveNumbers.get(index),
+    'y2': lastFiveNumbers.get(index)
+  });
+}));
+
+// 使用ui.Chart创建折线图
+var lineChart = ui.Chart.feature.byFeature({
+  features: chartData,
+  xProperty: 'x',
+  yProperties: ['y1', 'y2'] // 添加两组y值
+}).setSeriesNames(['Before the conflict', 'After the conflict']) // 设置系列名称
+  .setOptions({
+    title: 'Comparison of areas before and after the conflict',
+    hAxis: {title: 'month', titleTextStyle: {color: 'red'}},
+    vAxis: {title: 'vegetation Area', titleTextStyle: {color: 'blue'}},
+    legend: 'right' // 显示图例
+  });
+
+// 设置图表的尺寸
+var options = {
+  title: 'Comparison of areas before and after the conflict',
+  hAxis: {title: 'month', titleTextStyle: {color: 'red'}},
+  vAxis: {title: 'vegetation Area (km^2)', titleTextStyle: {color: 'blue'}},
+  legend: 'right',
+  width: 400, // 设置图表宽度
+  height: 300 // 设置图表高度
+};
+
+// 创建折线图
+var lineChart = ui.Chart.feature.byFeature({
+  features: chartData,
+  xProperty: 'x',
+  yProperties: ['y1', 'y2']
+}).setSeriesNames(['Before the cnflict', 'After the conflict']).setOptions(options);
+
+```
 
 
 
 You can include images:
+```js
+Map.setCenter(35.51898, 33.90153, 15);
+
+Map.setOptions("satellite");
+
+var aoi = ee.Geometry.Point(35.51898, 33.90153).buffer(3000);
+```
+```js
+Map.setCenter(35.51898, 33.90153, 15);
+
+Map.setOptions("satellite");
+
+var aoi = ee.Geometry.Point(35.51898, 33.90153).buffer(3000);
+```
+
 
 ![Pixelwise T-Test, 2018](images/beirut_change_2020.jpg)
 
