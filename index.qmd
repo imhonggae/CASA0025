@@ -47,8 +47,8 @@ Replace the link below with the link to your application.
 ## How it Works 
 
 Use this section to explain how your application works using code blocks and text explanations (no more than 500 words excluding code):
-
-
+### Preprocessing
+### Analysis
 
 
 ### Interface
