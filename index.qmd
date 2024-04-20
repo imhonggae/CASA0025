@@ -50,6 +50,8 @@ Use this section to explain how your application works using code blocks and tex
 
 
 ### Preprocessing
+1.We first represent the meanings of the data stored in the object in the code: 
+year, month, and pathSuffix are used to describe the starting date, month number, and path suffix respectively for each month.
 ```js
 // 定义月份的开始和结束日期
 var dates = [
@@ -65,7 +67,9 @@ var dates = [
   //{year: 2024, month: '03', pathSuffix: '2024_03'}
 ];
 ```
-
+2.而这段代码是用于定义可视化参数，min和max代表着数据的最小和最大值，bands则指定了要在图像中显示的波段，在这里使用了三个波段，
+分别是'B4'、'B3'、'B2'，这些波段对应于红、绿、蓝波段，通常用于创建彩色图像。注释部分提供了另一个 bands 的取值，是使用近红外、红、绿波段的假彩色合成。
+这种合成通常用于突出植被、土地和水体等特定地物的特征。opacity则表示了图像的透明度。
 ```js
 // 定义可视化参数
 var s_rgb = {
@@ -97,7 +101,7 @@ dates.forEach(function(dateRange) {
   var basePath = 'projects/ucfnqma/assets/Gaza/land_types_' + dateRange.pathSuffix;
   var landTypes = ee.FeatureCollection(basePath);
 ```
-
+```js
   // 为每种landType生成样本点
   var vegetationPoints = ee.FeatureCollection.randomPoints({
     region: landTypes.filter(ee.Filter.eq('landType', 'vegetation')),
@@ -116,7 +120,7 @@ dates.forEach(function(dateRange) {
   
   // 合并所有样本点，并添加随机列以后续分割
   var sample = vegetationPoints.merge(barePoints).merge(urbanPoints).randomColumn();
-
+```
 ### Analysis
 
 
