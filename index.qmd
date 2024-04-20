@@ -50,7 +50,7 @@ Use this section to explain how your application works using code blocks and tex
 
 
 ### Preprocessing
-
+```js
 // 定义月份的开始和结束日期
 var dates = [
   {year: 2022, month: '11', pathSuffix: '2022_11'},
@@ -64,6 +64,7 @@ var dates = [
   //{year: 2024, month: '02', pathSuffix: '2024_02'},
   //{year: 2024, month: '03', pathSuffix: '2024_03'}
 ];
+```
 
 // 定义可视化参数
 var s_rgb = {
