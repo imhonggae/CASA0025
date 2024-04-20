@@ -224,7 +224,7 @@ var aoi = ee.FeatureCollection('users/liujingyue01/Gaza');
 var imageCollection=ee.ImageCollection('projects/ee-guo112591/assets/GAZA');
 print(imageCollection)
 
-// 计算vegetation面积的函数
+// Calculating the vegetation area as a function
 function calculateVegetationArea(image) {
   var vegetationArea = image.select('classification').eq(0).multiply(ee.Image.pixelArea()).reduceRegion({
     reducer: ee.Reducer.sum(),
@@ -234,17 +234,17 @@ function calculateVegetationArea(image) {
   return ee.Feature(null, {'date': image.get('date'), 'vegetationArea': vegetationArea});
 }
 
-// 应用函数到imageCollection中的每个Image
+// Apply a function to each Image in the imageCollection
 var vegetationAreas = imageCollection.map(calculateVegetationArea).sort('date');
 
-// 将结果转换为列表
+// Convert the result to a list
 var vegetationAreaList = vegetationAreas.toList(vegetationAreas.size());
 
 print(vegetationAreaList)
 
 var firstFive = ee.List.sequence(0, 9).map(function(i) { return ee.Feature(vegetationAreaList.get(i)).get('vegetationArea'); });
 
-// // 将面积转换为数值
+// Convert the area to a numerical value
 var firstFiveNumbers = firstFive.map(function(area) { return ee.Number(area); });
 print(firstFiveNumbers)
 ```
@@ -262,10 +262,10 @@ var lastFiveNumbers = ee.List([145.504210,
   105.063353, 
   107.703722]);
 
-// 横坐标数据
+// Abscissa data
 var xAxis = ['11', '12', '1', '2', '3'];
 
-// 创建一个符合Google Visualization API的DataTable格式的数据源
+// Create a data source in the DataTable format that conforms to the Google Visualization API
 var chartData = ee.FeatureCollection(xAxis.map(function(x, index) {
   return ee.Feature(null, {
     'x': x,
@@ -274,43 +274,43 @@ var chartData = ee.FeatureCollection(xAxis.map(function(x, index) {
   });
 }));
 
-// 使用ui.Chart创建折线图
+// Create a line chart using ui.Chart
 var lineChart = ui.Chart.feature.byFeature({
   features: chartData,
   xProperty: 'x',
-  yProperties: ['y1', 'y2'] // 添加两组y值
-}).setSeriesNames(['Before the conflict', 'After the conflict']) // 设置系列名称
+  yProperties: ['y1', 'y2'] // Add two sets of y values
+}).setSeriesNames(['Before the conflict', 'After the conflict']) // Set series name
   .setOptions({
     title: 'Comparison of areas before and after the conflict',
     hAxis: {title: 'month', titleTextStyle: {color: 'red'}},
     vAxis: {title: 'vegetation Area', titleTextStyle: {color: 'blue'}},
-    legend: 'right' // 显示图例
+    legend: 'right' // Display legend
   });
 
-// 设置图表的尺寸
+// Set the size of the chart
 var options = {
   title: 'Comparison of areas before and after the conflict',
   hAxis: {title: 'month', titleTextStyle: {color: 'red'}},
   vAxis: {title: 'vegetation Area (km^2)', titleTextStyle: {color: 'blue'}},
   legend: 'right',
-  width: 400, // 设置图表宽度
-  height: 300 // 设置图表高度
+  width: 400, // Set chart width
+  height: 300 // Set chart height
 };
 
-// 创建折线图
+// Create a line chart
 var lineChart = ui.Chart.feature.byFeature({
   features: chartData,
   xProperty: 'x',
   yProperties: ['y1', 'y2']
 }).setSeriesNames(['Before the cnflict', 'After the conflict']).setOptions(options);
 
-// 调整侧边栏面板的样式，以确保有足够的空间显示图表
+// Adjust the style of the sidebar panel to ensure that there is enough space to display the chart
 sidebarPanel.style().set({
-  width: '400px', // 设置面板的最小宽度
-  height: 'auto' // 根据内容自动调整高度  
+  width: '400px', // Sets the minimum width of the panel
+  height: 'auto' // Automatically adjust the height according to the content
 });
 
-// 将折线图添加到侧边栏面板
+// Adds a line chart to the sidebar panel
 sidebarPanel.add(lineChart);
 ```
 
@@ -318,27 +318,27 @@ sidebarPanel.add(lineChart);
 
 #4.Draw all the month layers as GIFs and Click the GIF download button to complete the GIF download.
 ```js
-//显示动图
+//show gif
 function main() {
-  // 假设roi已经定义，并且是一个Feature或FeatureCollection
+  //Assume that the roi is defined and is a Feature or FeatureCollection
   var roi = aoi;
 
-  // 假设imgCol已经定义，并且它包含了10个单波段影像
+  // Let's say imgCol is defined and it contains 10 single-band images
   var imgCol = classificationCollection.map(function(image){
     return image.clip(roi);
   });
   
-  // 获取集合中的图像数量
+  // Gets the number of images in the collection
 var count =imgCol.toList(imgCol.size()).length();
 
-// 计算要跳过的图像数量
+// Calculate the number of images to skip
 var skipCount = 5;
 
-// 跳过前面的图像，获取最后五个图像
+// Skip the previous images to get the last five images
 var lastFiveImages = classificationCollection.toList(classificationCollection.size())
   .slice(skipCount, count);
 
-// 将列表转换回图像集合
+// Converts a list back to a collection of images
 imgCol = ee.ImageCollection.fromImages(lastFiveImages).map(function(img){
   return img.clip(aoi)
 });
@@ -347,40 +347,40 @@ imgCol = ee.ImageCollection.fromImages(lastFiveImages).map(function(img){
   
   
 
-  // 定义一个函数来将单波段影像映射到RGB颜色
+  // Defines a function to map a single-band image to an RGB color
   function mapToRgb(image) {
-    // 获取单波段影像
+    // Get a single band image
     var band = image.select([0]);
 
-    // 创建一个新的影像，其中每个像素的R、G、B值都相同
+    // Creates a new image with the same R, G, and B values for each pixel
     var r = band.where(band.eq(0), 0).where(band.eq(1), 255).where(band.eq(2), 200).toInt(); 
   var g = band.where(band.eq(0), 128).where(band.eq(1), 255).where(band.eq(2), 200).toInt(); 
   var b = band.where(band.eq(0), 0).where(band.eq(1), 0).where(band.eq(2), 200).toInt();
 
-    // // 返回一个新的影像，其中包含RGB波段
+   // Returns a new image containing the RGB band
     return ee.Image.cat(r, g, b).rename(['red', 'green', 'blue']).toFloat();
 }
 
-  // 将每个影像映射到RGB颜色
+  // Map each image to an RGB color
   var rgbImgCol = imgCol.map(mapToRgb);
 
-  // 动图参数
+ // GIF parameters
   var params = {
     crs: 'EPSG:3857',
     framesPerSecond: 2,
-    region: roi.geometry().transform('EPSG:3857', 1), // 使用转换后的region
+    region: roi.geometry().transform('EPSG:3857', 1), // Use the converted region
     min: 0,
     max: 255,
     bands: ['red', 'green', 'blue'],
     dimensions: 512,
   };
-  // 将动图添加到面板
+  // Add the GIF to the panel
   sidebarPanel.add(ui.Thumbnail(rgbImgCol, params));
   
-  // 创建一个标签
+  // Create a tag
   var label = ui.Label('Download the GIF of "Changing Land Conditions in Conflict".');
 
-  // 设置标签的 URL，使其成为一个超链接
+  // Set the URL of the tag to make it a hyperlink
   label.setUrl(rgbImgCol.getVideoThumbURL(params));
 
   sidebarPanel.add(label);
