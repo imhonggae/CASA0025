@@ -64,9 +64,9 @@ var dates = [
   //{year: 2024, month: '02', pathSuffix: '2024_02'},
   //{year: 2024, month: '03', pathSuffix: '2024_03'}
 ];
-
 ```
 
+```js
 // 定义可视化参数
 var s_rgb = {
   min: 0.0,
@@ -75,6 +75,7 @@ var s_rgb = {
  // bands:['B8', 'B4', 'B3'], // 使用近红外、红、绿波段的假彩色合成 
   opacity:1
 };
+```
 
 dates.forEach(function(dateRange) {
   var start = dateRange.year + '-' + dateRange.month + '-01';
