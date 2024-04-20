@@ -151,7 +151,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="the-application">The Application</h2>
 <p>Replace the link below with the link to your application.</p>
 <div class="column-page">
-<iframe src="https://bigdata0025.projects.earthengine.app/view/conflict" width="100%" height="700px">
+<iframe src="https://bigdata0025.projects.earthengine.app/view/conflictupdate" width="100%" height="700px">
 </iframe>
 </div>
 </section>
@@ -479,24 +479,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Add the GIF to the panel</span></span>
 <span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>  sidebarPanel<span class="op">.</span><span class="fu">add</span>(ui<span class="op">.</span><span class="fu">Thumbnail</span>(rgbImgCol<span class="op">,</span> params))<span class="op">;</span></span>
 <span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Create a tag</span></span>
-<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> label <span class="op">=</span> ui<span class="op">.</span><span class="fu">Label</span>(<span class="st">'Download the GIF of "Changing Land Conditions in Conflict".'</span>)<span class="op">;</span></span>
-<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Set the URL of the tag to make it a hyperlink</span></span>
-<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>  label<span class="op">.</span><span class="fu">setUrl</span>(rgbImgCol<span class="op">.</span><span class="fu">getVideoThumbURL</span>(params))<span class="op">;</span></span>
-<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a>  sidebarPanel<span class="op">.</span><span class="fu">add</span>(label)<span class="op">;</span></span>
-<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a><span class="fu">main</span>()<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a><span class="fu">main</span>()<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ol start="7" type="1">
 <li>Create a tag and set the tag’s hyperlink to download the GIF.</li>
 </ol>
 <div class="sourceCode" id="cb8"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Create a label</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> label <span class="op">=</span> ui<span class="op">.</span><span class="fu">Label</span>(<span class="st">'Download the GIF of "Changing Land Conditions in Conflict".'</span>)<span class="op">;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> label <span class="op">=</span> ui<span class="op">.</span><span class="fu">Label</span>(<span class="st">'Download the GIF of "Changing Land Conditions in Conflict".'</span>)<span class="op">;</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Set the URL of the tag to make it a hyperlink</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  label<span class="op">.</span><span class="fu">setUrl</span>(rgbImgCol<span class="op">.</span><span class="fu">getVideoThumbURL</span>(params))<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>label<span class="op">.</span><span class="fu">setUrl</span>(rgbImgCol<span class="op">.</span><span class="fu">getVideoThumbURL</span>(params))<span class="op">;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>sidebarPanel<span class="op">.</span><span class="fu">add</span>(label)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>The image output should look like this:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">

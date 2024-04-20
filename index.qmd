@@ -1,5 +1,5 @@
 # CASA00025 Group Project Title Here
- 
+
 ## Project Summary 
 
 Fill in the sections below to provide a brief summary of your project. Each section should have no more than 100 words. Do not edit any of the headings.
@@ -381,13 +381,6 @@ function main() {
   // Add the GIF to the panel
   sidebarPanel.add(ui.Thumbnail(rgbImgCol, params));
   
-  // Create a tag
-  var label = ui.Label('Download the GIF of "Changing Land Conditions in Conflict".');
-
-  // Set the URL of the tag to make it a hyperlink
-  label.setUrl(rgbImgCol.getVideoThumbURL(params));
-
-  sidebarPanel.add(label);
 }
 
 main();
@@ -397,10 +390,12 @@ main();
 
 ```js
 // Create a label
-  var label = ui.Label('Download the GIF of "Changing Land Conditions in Conflict".');
+var label = ui.Label('Download the GIF of "Changing Land Conditions in Conflict".');
 
 // Set the URL of the tag to make it a hyperlink
-  label.setUrl(rgbImgCol.getVideoThumbURL(params));
+label.setUrl(rgbImgCol.getVideoThumbURL(params));
+
+sidebarPanel.add(label);
 ```
 
 
