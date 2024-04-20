@@ -402,7 +402,7 @@ Create a tag and set the tag's hyperlink to download the GIF.
 
 You can include images:
 
-![Pixelwise T-Test, 2018](images/beirut_change_2020.jpg)
+![Changing Land conditions in Conflict, 2023.11-2024.3](images/conflict.gif)
 
 and math:
 $$ \Large t = {\frac{\overline{x_1}-\overline{x_2}} {\sqrt{\frac{s^2_1}{n_1} + \frac{s^2_2}{n_2}}}} $$

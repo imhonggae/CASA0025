@@ -24,13 +24,22 @@ How are you using this data to address the problem?
 
 How does your application's interface work to address the needs of your end user?
 
+There are four main steps in the process of creating the User Interface (UI):
+
+  1.Use the year selector to select the relevant year to display the appropriate layer.
+  2.Add the legends to the map.
+  3.The vegetation area before and after the conflict was calculated, and the change of vegetation area before and after the war was shown using line plots.
+  4.Draw all the month layers as GIFs.
+  5.Click the GIF download button to complete the GIF download.
+
+
 ## The Application 
 
 Replace the link below with the link to your application.
 
 :::{.column-page}
 
-<iframe src='https://ee-hongkairen81.projects.earthengine.app/view/casa-final-course' width='100%' height='700px'></iframe>
+<iframe src='https://bigdata0025.projects.earthengine.app/view/conflict' width='100%' height='700px'></iframe>
 
 :::
 ## How it Works 
@@ -45,9 +54,355 @@ Map.setOptions("satellite");
 var aoi = ee.Geometry.Point(35.51898, 33.90153).buffer(3000);
 ```
 
+
+##Interface
+#1. Select the relevant year to display the appropriate layer
+Firstly,  Create a map instance and Set the center point and zoom level of the map
+
+```js
+var map1 = ui.Map();
+
+map1.centerObject(aoi,10.5);
+```
+![Pixelwise T-Test, 2018](images/beirut_change_2020.jpg)
+
+Then Create a selection box where the user can select 11, 12, 1, 2, 3 and add response logic when options change. After that call the function to update the displayed layer.
+```js
+var imageCollection = classificationCollection.map(function(img){
+  return img.clip(aoi);
+});
+// Create a selection box where the user can select 11, 12, 1, 2, 3
+var select = ui.Select({
+  items: ['2022-11', '2022-12', '2023-01', '2023-02', '2023-03','2023-11', '2023-12', '2024-01', '2024-02', '2024-03'],
+  value: '2022-11',  //Default selection '2022-11'
+  placeholder: 'Choose a number',
+  onChange: function(value) {
+    // Here you can add the response logic when the options change
+    updateMaps(value); // Call the function to update the map
+  }
+});
+
+// Create a label
+var label = ui.Label('Please select a time', {margin: '10px 0px 5px 0px'});
+
+// Create a panel where you can place the selection boxes and labels
+var controlPanel = ui.Panel({
+  widgets: [label, select],
+  style: {width: '300px', padding: '10px'} , // Positioning and styling
+  layout: ui.Panel.Layout.flow('horizontal')  // Set to horizontal layout
+});
+
+// Add the map to the root panel
+ui.root.widgets().reset([map1]);
+
+
+// Set the style of the map
+map1.style().set('width', '65%');
+
+// Create a panel to place the control panel
+var sidebarPanel = ui.Panel({
+  widgets: [controlPanel],
+  style: {position: 'top-right', width: '120px',height: '300px',  margin: '0px 10px 0px 0px'}
+});
+
+// Adds the sidebar panel to the root panel
+ui.root.add(sidebarPanel);
+```
+![Pixelwise T-Test, 2018](images/beirut_change_2020.jpg)
+
+This is the detail of update function. In this function, we first converts a collection of images to a list, then determine the index of the image by month 
+```js
+// Converts a collection of images to a list
+var imageList = imageCollection.toList(imageCollection.size());
+
+function updateMaps(month) {
+  // Determine the index of the image by month
+  var index1;
+  switch (month) {
+    case '2022-11':
+      index1 = 0;
+      break;
+    case '2022-12':
+      index1 = 1;
+      break;
+    case '2023-01':
+      index1 = 2;
+      break;
+    case '2023-02':
+      index1 = 3;
+      break;
+    case '2023-03':
+      index1 = 4;
+      break;
+    case '2023-11':
+      index1 = 5;
+      break;
+    case '2023-12':
+      index1 = 6;
+      break;
+    case '2024-01':
+      index1 = 7;
+      break;
+    case '2024-02':
+      index2 = 8;
+      break;
+    case '2024-03':
+      index1 = 9;
+      break;
+    default:
+      console.error('Invalid month selected:', month);
+      return;
+  }
+  // Get the image by index
+  var image1 = ee.Image(imageList.get(index1));
+```
+
+
+#2. Add the legends to the map
+First define the color list and description list, then create the legend style and legend panel. Add legend items in a loop. It contains description labels and color blocks, adds legend items to the inside version of the diagram, and adds legends to the lower left corner of the map.
+```js
+pdateMaps('2022-11');
+
+// Define the color list and description list
+var palette = ['green', 'yellow', 'grey']; // Suppose this is your list of colors
+var names = ['vegetation', 'bare', 'urban']; // A description corresponding to the color
+
+// Create a style for the legend
+var legendStyle = {
+  margin: '0px 8px 15px 0px',
+  padding: '0px 5px 5px 0px',
+  position: 'bottom-left'
+};
+
+// Create the panel of legend
+var legendPanel = ui.Panel({
+  widgets: [], // Used to add legend entries
+  style: legendStyle
+});
+
+// Add a legend entry
+for (var i = 0; i < palette.length; i++) {
+  var legendItem = ui.Panel({
+    layout: ui.Panel.Layout.Flow('horizontal'),
+    style: {margin: '0px 10px'}
+  });
+  
+  // create color block
+  var colorBlock = ui.Label({
+    style: {
+      backgroundColor: palette[i],
+      padding: '5px',
+      margin: '0 0 4px 0'
+    }
+  });
+  
+  // create desctription label
+  var description = ui.Label({
+    value: names[i],
+    style: {margin: '0 0 4px 8px'}
+  });
+  
+  legendItem.add(colorBlock);
+  legendItem.add(description);
+  
+  // Adds a legend item to the Legend panel
+  legendPanel.add(legendItem);
+}
+
+// Add the legend to the bottom left corner of the map
+map1.add(legendPanel);
+```
+![Pixelwise T-Test, 2018](images/beirut_change_2020.jpg)
+
+
+#3.The vegetation area before and after the conflict was calculated, and the change of vegetation area before and after the war was shown using line plots.
+
+First calculate the vegetation area of each layer
+```js
+
+var aoi = ee.FeatureCollection('users/liujingyue01/Gaza');
+var imageCollection=ee.ImageCollection('projects/ee-guo112591/assets/GAZA');
+print(imageCollection)
+
+// Calculating the vegetation area as a function
+function calculateVegetationArea(image) {
+  var vegetationArea = image.select('classification').eq(0).multiply(ee.Image.pixelArea()).reduceRegion({
+    reducer: ee.Reducer.sum(),
+    geometry: aoi,
+    scale: 30
+  }).get('classification');
+  return ee.Feature(null, {'date': image.get('date'), 'vegetationArea': vegetationArea});
+}
+
+// Apply a function to each Image in the imageCollection
+var vegetationAreas = imageCollection.map(calculateVegetationArea).sort('date');
+
+// Convert the result to a list
+var vegetationAreaList = vegetationAreas.toList(vegetationAreas.size());
+
+print(vegetationAreaList)
+
+var firstFive = ee.List.sequence(0, 9).map(function(i) { return ee.Feature(vegetationAreaList.get(i)).get('vegetationArea'); });
+
+// Convert the area to a numerical value
+var firstFiveNumbers = firstFive.map(function(area) { return ee.Number(area); });
+print(firstFiveNumbers)
+```
+In order to reduce the time, we manually enter the calculated time above into the code and then generate the line chart.
+Set two y values in the line chart, respectively before conflict and after conflict
+```js
+var firstFiveNumbers = ee.List([ 108.981451,
+  124.064503,
+  156.647346,
+  160.888861,
+  191.688693]);
+var lastFiveNumbers = ee.List([145.504210,
+  160.795185,
+  125.786433,
+  105.063353, 
+  107.703722]);
+
+// Abscissa data
+var xAxis = ['11', '12', '1', '2', '3'];
+
+// Create a data source in the DataTable format that conforms to the Google Visualization API
+var chartData = ee.FeatureCollection(xAxis.map(function(x, index) {
+  return ee.Feature(null, {
+    'x': x,
+    'y1': firstFiveNumbers.get(index),
+    'y2': lastFiveNumbers.get(index)
+  });
+}));
+
+// Create a line chart using ui.Chart
+var lineChart = ui.Chart.feature.byFeature({
+  features: chartData,
+  xProperty: 'x',
+  yProperties: ['y1', 'y2'] // Add two sets of y values
+}).setSeriesNames(['Before the conflict', 'After the conflict']) // Set series name
+  .setOptions({
+    title: 'Comparison of areas before and after the conflict',
+    hAxis: {title: 'month', titleTextStyle: {color: 'red'}},
+    vAxis: {title: 'vegetation Area', titleTextStyle: {color: 'blue'}},
+    legend: 'right' // Display legend
+  });
+
+// Set the size of the chart
+var options = {
+  title: 'Comparison of areas before and after the conflict',
+  hAxis: {title: 'month', titleTextStyle: {color: 'red'}},
+  vAxis: {title: 'vegetation Area (km^2)', titleTextStyle: {color: 'blue'}},
+  legend: 'right',
+  width: 400, // Set chart width
+  height: 300 // Set chart height
+};
+
+// Create a line chart
+var lineChart = ui.Chart.feature.byFeature({
+  features: chartData,
+  xProperty: 'x',
+  yProperties: ['y1', 'y2']
+}).setSeriesNames(['Before the cnflict', 'After the conflict']).setOptions(options);
+
+// Adjust the style of the sidebar panel to ensure that there is enough space to display the chart
+sidebarPanel.style().set({
+  width: '400px', // Sets the minimum width of the panel
+  height: 'auto' // Automatically adjust the height according to the content
+});
+
+// Adds a line chart to the sidebar panel
+sidebarPanel.add(lineChart);
+```
+
+
+
+#4.Draw all the month layers as GIFs and Click the GIF download button to complete the GIF download.
+```js
+//show gif
+function main() {
+  //Assume that the roi is defined and is a Feature or FeatureCollection
+  var roi = aoi;
+
+  // Let's say imgCol is defined and it contains 10 single-band images
+  var imgCol = classificationCollection.map(function(image){
+    return image.clip(roi);
+  });
+  
+  // Gets the number of images in the collection
+var count =imgCol.toList(imgCol.size()).length();
+
+// Calculate the number of images to skip
+var skipCount = 5;
+
+// Skip the previous images to get the last five images
+var lastFiveImages = classificationCollection.toList(classificationCollection.size())
+  .slice(skipCount, count);
+
+// Converts a list back to a collection of images
+imgCol = ee.ImageCollection.fromImages(lastFiveImages).map(function(img){
+  return img.clip(aoi)
+});
+
+  
+  
+  
+
+  // Defines a function to map a single-band image to an RGB color
+  function mapToRgb(image) {
+    // Get a single band image
+    var band = image.select([0]);
+
+    // Creates a new image with the same R, G, and B values for each pixel
+    var r = band.where(band.eq(0), 0).where(band.eq(1), 255).where(band.eq(2), 200).toInt(); 
+  var g = band.where(band.eq(0), 128).where(band.eq(1), 255).where(band.eq(2), 200).toInt(); 
+  var b = band.where(band.eq(0), 0).where(band.eq(1), 0).where(band.eq(2), 200).toInt();
+
+   // Returns a new image containing the RGB band
+    return ee.Image.cat(r, g, b).rename(['red', 'green', 'blue']).toFloat();
+}
+
+  // Map each image to an RGB color
+  var rgbImgCol = imgCol.map(mapToRgb);
+
+ // GIF parameters
+  var params = {
+    crs: 'EPSG:3857',
+    framesPerSecond: 2,
+    region: roi.geometry().transform('EPSG:3857', 1), // Use the converted region
+    min: 0,
+    max: 255,
+    bands: ['red', 'green', 'blue'],
+    dimensions: 512,
+  };
+  // Add the GIF to the panel
+  sidebarPanel.add(ui.Thumbnail(rgbImgCol, params));
+  
+  // Create a tag
+  var label = ui.Label('Download the GIF of "Changing Land Conditions in Conflict".');
+
+  // Set the URL of the tag to make it a hyperlink
+  label.setUrl(rgbImgCol.getVideoThumbURL(params));
+
+  sidebarPanel.add(label);
+}
+
+main();
+```
+
+
+Create a tag and set the tag's hyperlink to download the GIF.
+```js
+// Create a label
+  var label = ui.Label('Download the GIF of "Changing Land Conditions in Conflict".');
+
+// Set the URL of the tag to make it a hyperlink
+  label.setUrl(rgbImgCol.getVideoThumbURL(params));
+```
+
+
 You can include images:
 
-![Pixelwise T-Test, 2018](images/beirut_change_2020.jpg)
+![Changing Land conditions in Conflict, 2023.11-2024.3](images/conflict.gif)
 
 and math:
 $$ \Large t = {\frac{\overline{x_1}-\overline{x_2}} {\sqrt{\frac{s^2_1}{n_1} + \frac{s^2_2}{n_2}}}} $$
