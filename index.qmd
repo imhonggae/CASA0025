@@ -98,6 +98,15 @@ ui.root.widgets().reset([map1]);
 
 // Set the style of the map
 map1.style().set('width', '65%');
+
+// Create a panel to place the control panel
+var sidebarPanel = ui.Panel({
+  widgets: [controlPanel],
+  style: {position: 'top-right', width: '120px',height: '300px',  margin: '0px 10px 0px 0px'}
+});
+
+// Adds the sidebar panel to the root panel
+ui.root.add(sidebarPanel);
 ```
 ![Pixelwise T-Test, 2018](images/beirut_change_2020.jpg)
 
@@ -239,7 +248,8 @@ var firstFive = ee.List.sequence(0, 9).map(function(i) { return ee.Feature(veget
 var firstFiveNumbers = firstFive.map(function(area) { return ee.Number(area); });
 print(firstFiveNumbers)
 ```
-In order to reduce the time, we manually enter the calculated time above into the code and then generate the line chart
+In order to reduce the time, we manually enter the calculated time above into the code and then generate the line chart.
+Set two y values in the line chart, respectively before conflict and after conflict
 ```js
 var firstFiveNumbers = ee.List([ 108.981451,
   124.064503,
@@ -294,11 +304,19 @@ var lineChart = ui.Chart.feature.byFeature({
   yProperties: ['y1', 'y2']
 }).setSeriesNames(['Before the cnflict', 'After the conflict']).setOptions(options);
 
+// 调整侧边栏面板的样式，以确保有足够的空间显示图表
+sidebarPanel.style().set({
+  width: '400px', // 设置面板的最小宽度
+  height: 'auto' // 根据内容自动调整高度  
+});
+
+// 将折线图添加到侧边栏面板
+sidebarPanel.add(lineChart);
 ```
 
 
 
-#4.Draw all the month layers as GIFs.
+#4.Draw all the month layers as GIFs and Click the GIF download button to complete the GIF download.
 ```js
 //显示动图
 function main() {
@@ -326,6 +344,9 @@ imgCol = ee.ImageCollection.fromImages(lastFiveImages).map(function(img){
 });
 
   
+  
+  
+
   // 定义一个函数来将单波段影像映射到RGB颜色
   function mapToRgb(image) {
     // 获取单波段影像
@@ -353,14 +374,32 @@ imgCol = ee.ImageCollection.fromImages(lastFiveImages).map(function(img){
     bands: ['red', 'green', 'blue'],
     dimensions: 512,
   };
+  // 将动图添加到面板
+  sidebarPanel.add(ui.Thumbnail(rgbImgCol, params));
+  
+  // 创建一个标签
+  var label = ui.Label('Download the GIF of "Changing Land Conditions in Conflict".');
+
+  // 设置标签的 URL，使其成为一个超链接
+  label.setUrl(rgbImgCol.getVideoThumbURL(params));
+
+  sidebarPanel.add(label);
+}
+
+main();
 ```
+
+
+Create a tag and set the tag's hyperlink to download the GIF.
 ```js
-Map.setCenter(35.51898, 33.90153, 15);
+// Create a label
+  var label = ui.Label('Download the GIF of "Changing Land Conditions in Conflict".');
 
-Map.setOptions("satellite");
-
-var aoi = ee.Geometry.Point(35.51898, 33.90153).buffer(3000);
+// Set the URL of the tag to make it a hyperlink
+  label.setUrl(rgbImgCol.getVideoThumbURL(params));
 ```
+
+
 You can include images:
 
 ![Pixelwise T-Test, 2018](images/beirut_change_2020.jpg)
