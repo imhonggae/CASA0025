@@ -101,12 +101,14 @@ dates.forEach(function(dateRange) {
 
   Map.addLayer(image.clip(aoi), s_rgb, 'Sentinel ' + dateRange.year + '-' + dateRange.month);
 ```
-4.
+4.这部分代码加载了一个特定月份的地物类型 FeatureCollection，用于指定特定月份的数据集路径，存储在变量 landTypes 中。
 ```js
   // 加载特定月份的FeatureCollection
   var basePath = 'projects/ucfnqma/assets/Gaza/land_types_' + dateRange.pathSuffix;
   var landTypes = ee.FeatureCollection(basePath);
 ```
+5.下一段代码用于在 Google Earth Engine 中分别生成植被类，裸土类和城市类的样本点集合，并为每个样本点添加一个类别标签，
+以便进行地物分类或监督学习等任务。
 ```js
   // 为每种landType生成样本点
   var vegetationPoints = ee.FeatureCollection.randomPoints({
@@ -123,7 +125,9 @@ dates.forEach(function(dateRange) {
     region: landTypes.filter(ee.Filter.eq('landType', 'urban')),
     points: 1000 // 假设为城市类的数量
   }).map(function(feat) { return feat.set('class', 2); });
-  
+```
+6.这行代码的作用是将三类样本点集合合并成一个样本点集合，并为每个样本点添加了一个随机列，用于后续的样本操作。
+```js
   // 合并所有样本点，并添加随机列以后续分割
   var sample = vegetationPoints.merge(barePoints).merge(urbanPoints).randomColumn();
 ```
