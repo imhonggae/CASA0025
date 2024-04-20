@@ -7,21 +7,26 @@ This application is based on remote sensing technology and machine learning algo
 ### Problem Statement 
 
 **Challenges in Monitoring Vegetation Cover**:
+
 Due to the ongoing conflict in the Gaza area, ground access is extremely limited, making traditional surveying methods unfeasible and accurate information on vegetation status and changes unattainable. This project utilize remote sensing technology and machine learning methods to provide a safe and effective way to monitor vegetation cover changes from a distance, thus solving the challenges of on-site measurement.
 
 **Humanitarian Crisis and Food Dependency in Gaza**:
+
 Gaza is one of the most densely populated areas in the world and faces chronic food shortages, heavily relying on international aid. The escalation of the Israel-Palestine conflict has led to the severance of aid supply channels, further increasing the local population's dependency on limited arable land resources. In this context, remote sensing data analysis can effectively assess the impact of the conflict on agricultural land, thereby quantifying the severity of the humanitarian crisis.
 
 
 ### End User 
 
 **International Aid and Humanitarian Organizations**:
+
 Humanitarian organizations require accurate data to assess the impact of conflicts on local ecology and agricultural productivity, to optimize their aid plans and resource allocation. The remote sensing analysis provided by this project can guide them in formulating more effective rescue and assistance strategies during emergencies.
 
 **Regional Research Scholars**:
+
 For the Gaza region, which relies heavily on agricultural production, understanding changes in vegetation cover is crucial for adjusting agricultural production plans and farming methods. The results of this project can aid researchers studying the food structure of this region in predicting yield changes and providing sound advice to address Gaza's food shortage issues.
 
 **Public and Media**:
+
 The results processed through professional technical methods can be visually presented to the public and media, thereby drawing broader attention to the ongoing humanitarian crisis in the Gaza area through more extensive channels.
 
 
