@@ -92,10 +92,11 @@ dates.forEach(function(dateRange) {
 
   Map.addLayer(image.clip(aoi), s_rgb, 'Sentinel ' + dateRange.year + '-' + dateRange.month);
 ```
-
+```js
   // 加载特定月份的FeatureCollection
   var basePath = 'projects/ucfnqma/assets/Gaza/land_types_' + dateRange.pathSuffix;
   var landTypes = ee.FeatureCollection(basePath);
+```
 
   // 为每种landType生成样本点
   var vegetationPoints = ee.FeatureCollection.randomPoints({
