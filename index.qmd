@@ -80,6 +80,11 @@ var s_rgb = {
   opacity:1
 };
 ```
+3.这段代码运用 GEE JavaScript API 处理 了Sentinel-2 影像数据，并在地图上完成了可视化，
+代码创建了一个 Sentinel-2 表面反射（Surface Reflectance）影像的 ImageCollection。
+然后，使用 filter() 方法选择了时间范围内云量小于 15% 的影像，并选择了指定的波段集合。
+最后，使用 median() 方法计算了时间范围内影像的中位数，得到一个合成影像。
+代码同时计算了归一化水体指数（NDWI），并将 NDWI 小于 0.3 的像素设置为无效（掩膜），从合成影像中选择了指定的波段并将处理后的影像添加到地图中进行可视化。
 ```js
 dates.forEach(function(dateRange) {
   var start = dateRange.year + '-' + dateRange.month + '-01';
@@ -96,6 +101,7 @@ dates.forEach(function(dateRange) {
 
   Map.addLayer(image.clip(aoi), s_rgb, 'Sentinel ' + dateRange.year + '-' + dateRange.month);
 ```
+4.
 ```js
   // 加载特定月份的FeatureCollection
   var basePath = 'projects/ucfnqma/assets/Gaza/land_types_' + dateRange.pathSuffix;
