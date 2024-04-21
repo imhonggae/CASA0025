@@ -36,10 +36,15 @@ This software utilizes satellite imagery data from the Sentinel-2 satellite prov
 
 ### Methodology
 
-Method：Random Forest
+Method：
 
-math:
-$$ \Large t = {\frac{\overline{x_1}-\overline{x_2}} {\sqrt{\frac{s^2_1}{n_1} + \frac{s^2_2}{n_2}}}} $$
+1.Random Forest- for classification
+
+2.Confusion Matrix  - for validation
+
+<i>Confusion Matrix Accuracy Formula:</i>
+
+\begin{equation} Accuracy = \frac{TP + TN}{TP + FP + FN + TN}\end{equation}
 
 ### Interface
 
