@@ -175,7 +175,6 @@ window.Quarto = {
 </section>
 <section id="methodology" class="level3">
 <h3 class="anchored" data-anchor-id="methodology">Methodology</h3>
-<p>Method：</p>
 <p>1.Random Forest- for classification<br>
 <img src="images/random_forest_diagram.jpg" class="img-fluid" alt="Random Forest Diagram"></p>
 <p>2.Confusion Matrix - for validation</p>
@@ -185,10 +184,11 @@ window.Quarto = {
 FP: the number of negative cases that the model incorrectly predicted as positive (False Positive)<br>
 FN: the number of positive cases that the model incorrectly predicted as negative (False Negative)<br>
 TN: the number of negative cases that the model correctly predicted as negative (True Negative)</p>
+<p>3.Comparison Validation:</p>
+<p>The land use type predicted by the model is compared with the actual picture to judge whether the model result is correct.</p>
 </section>
 <section id="interface" class="level3">
 <h3 class="anchored" data-anchor-id="interface">Interface</h3>
-<p>How does your application’s interface work to address the needs of your end user?</p>
 <p>The following four UI designs are mainly used to meet the needs of users:</p>
 <ol type="1">
 <li>Different colored legends were designed to represent different types of land. For example, green represents vegetation, yellow represents bare land, and gray represents urban.</li>
@@ -208,7 +208,9 @@ TN: the number of negative cases that the model correctly predicted as negative 
 </section>
 <section id="how-it-works" class="level2">
 <h2 class="anchored" data-anchor-id="how-it-works">How it Works</h2>
-<p>Use this section to explain how your application works using code blocks and text explanations (no more than 500 words excluding code):</p>
+</section>
+<section id="classification-and-projection-of-land-use-types-in-gaza" class="level2">
+<h2 class="anchored" data-anchor-id="classification-and-projection-of-land-use-types-in-gaza">Ⅰ. Classification and Projection of Land Use Types in Gaza</h2>
 <section id="preprocessing" class="level3">
 <h3 class="anchored" data-anchor-id="preprocessing">Preprocessing</h3>
 <ol type="1">
@@ -364,8 +366,9 @@ TN: the number of negative cases that the model correctly predicted as negative 
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">description</span><span class="op">:</span> <span class="st">'land_types_2022_11'</span><span class="op">,</span></span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">assetId</span><span class="op">:</span> <span class="st">'projects/ucfnqma/assets/Gaza/land_types_2022_11'</span>})<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="interface-analysis-area-and-conduct-the-interface" class="level3">
-<h3 class="anchored" data-anchor-id="interface-analysis-area-and-conduct-the-interface">Interface (Analysis area and conduct the interface)</h3>
+</section>
+<section id="interface-analysis-area-and-conduct-the-interface" class="level2">
+<h2 class="anchored" data-anchor-id="interface-analysis-area-and-conduct-the-interface">Ⅱ. Interface (Analysis area and conduct the interface)</h2>
 <ol type="1">
 <li>Create a map instance and Set the center point and zoom level of the map</li>
 </ol>
@@ -706,7 +709,6 @@ TN: the number of negative cases that the model correctly predicted as negative 
 </div>
 
 
-</section>
 </section>
 </section>
 

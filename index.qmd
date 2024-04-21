@@ -36,8 +36,6 @@ This software utilizes satellite imagery data from the Sentinel-2 satellite prov
 
 ### Methodology
 
-Method：
-
 1.Random Forest- for classification  
 ![Random Forest Diagram](images/random_forest_diagram.jpg)
 
@@ -52,10 +50,12 @@ FP: the number of negative cases that the model incorrectly predicted as positiv
 FN: the number of positive cases that the model incorrectly predicted as negative (False Negative)  
 TN: the number of negative cases that the model correctly predicted as negative (True Negative) 
 
+3.Comparison Validation: 
+
+The land use type predicted by the model is compared with the actual picture to judge whether the model result is correct.
+
 
 ### Interface
-
-How does your application's interface work to address the needs of your end user?
 
 The following four UI designs are mainly used to meet the needs of users:
 
@@ -76,9 +76,7 @@ Replace the link below with the link to your application.
 :::
 ## How it Works 
 
-Use this section to explain how your application works using code blocks and text explanations (no more than 500 words excluding code):
-
-
+## Ⅰ. Classification and Projection of Land Use Types in Gaza
 ### Preprocessing
 1. We've defined the meanings of the data stored in the object in the code: year, month, and pathSuffix are used to respectively describe the starting date, month number, and path suffix for each month.
 ```js
@@ -251,7 +249,7 @@ Export.table.toAsset({
   description: 'land_types_2022_11',
   assetId: 'projects/ucfnqma/assets/Gaza/land_types_2022_11'});
 ```
-### Interface (Analysis area and conduct the interface)
+## Ⅱ. Interface (Analysis area and conduct the interface)
 1. Create a map instance and Set the center point and zoom level of the map
 
 ```js
