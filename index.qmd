@@ -74,7 +74,7 @@ Replace the link below with the link to your application.
 
 :::{.column-page}
 
-<iframe src=' https://ee-liujingyue01.projects.earthengine.app/view/gaza' width='100%' height='700px'></iframe>
+<iframe src=' https://ee-liujingyue01.projects.earthengine.app/view/Gaza' width='100%' height='700px'></iframe>
 
 :::
 ## How it Works 
