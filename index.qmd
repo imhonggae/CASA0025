@@ -39,17 +39,19 @@ This software utilizes satellite imagery data from the Sentinel-2 satellite prov
 Method：
 
 1.Random Forest- for classification
-
+![Random Forest Diagram](images/random_forest_diagram.jpg)
 2.Confusion Matrix  - for validation
 
 <i>Confusion Matrix Accuracy Formula:</i>
 
 \begin{equation} Accuracy = \frac{TP + TN}{TP + FP + FN + TN}\end{equation}
 
-TP: the number of cases that the model correctly predicted as positive. (True Positive)
-FP: the number of negative cases that the model incorrectly predicted as positive (False Positive)
-FN: the number of positive cases that the model incorrectly predicted as negative (False Negative)
-TN: the number of negative cases that the model correctly predicted as negative (True Negative)
+TP: the number of cases that the model correctly predicted as positive. (True Positive)  
+FP: the number of negative cases that the model incorrectly predicted as positive (False Positive)  
+FN: the number of positive cases that the model incorrectly predicted as negative (False Negative)  
+TN: the number of negative cases that the model correctly predicted as negative (True Negative) 
+
+
 ### Interface
 
 How does your application's interface work to address the needs of your end user?
