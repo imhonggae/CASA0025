@@ -36,7 +36,7 @@ This software utilizes satellite imagery data from the Sentinel-2 satellite prov
 
 ### Methodology
 
-How are you using this data to address the problem?
+Method：Random Forest
 
 math:
 $$ \Large t = {\frac{\overline{x_1}-\overline{x_2}} {\sqrt{\frac{s^2_1}{n_1} + \frac{s^2_2}{n_2}}}} $$
@@ -143,14 +143,22 @@ It specifies the dataset path for the specific month and stores it in the variab
   }).map(function(feat) { return feat.set('class', 2); });
 ```
 7. This line of code merges three classes of sample point collections into one, 
-and adds a random column to each sample point for subsequent operations such as image clipping.。
+and adds a random column to each sample point for subsequent operations such as image clipping.
 ```js
   // 合并所有样本点，并添加随机列以后续分割
   var sample = vegetationPoints.merge(barePoints).merge(urbanPoints).randomColumn();
 ```
 ### Analysis
+8. In this section we defined the split ratio using 'var split = 0.7'.
+This means assign 70% of training points to validation. 
+Based on the values of the random columns, 70% of the sample points are assigned to the verification set, and the remaining 30% are kept in the training set
 
-
+```js
+ // Split sample set
+  var split = 0.7;
+  var training_sample = sample.filter(ee.Filter.lt('random', split));
+  var validation_sample = sample.filter(ee.Filter.gte('random', split));
+```
 
 ### Interface
 1. Create a map instance and Set the center point and zoom level of the map
