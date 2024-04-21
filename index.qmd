@@ -81,7 +81,7 @@ Replace the link below with the link to your application.
 
 ## Ⅰ. Classification and Projection of Land Use Types in Gaza
 
-The complete process code can be seen here:[Classification and interaction](https://code.earthengine.google.com/a26dfaa986b9f0e68fc225e584ce3872) ； [Calculation of area](https://code.earthengine.google.com/9320c592587da44f17c27a9677b7d311)
+The complete process code can be seen here:[Classification and interaction](https://code.earthengine.google.com/25507ac35cfd75c0be52d6f601928373) ； [Calculation of area](https://code.earthengine.google.com/5fda35fc10834046f5853cd7d4db7251)
 
 ### Preprocessing
 1. We've defined the meanings of the data stored in the object in the code: 
@@ -250,8 +250,6 @@ var combinedFeatures = vegetation.merge(urban).merge(bare);
 ```
 
 ## Ⅱ. Interface (Analysis area and conduct the Visual interaction)
-
-The complete process code can be seen here:[Calculation of area](https://code.earthengine.google.com/9320c592587da44f17c27a9677b7d311)
 
 
 1. Create a map instance and Set the center point and zoom level of the map
