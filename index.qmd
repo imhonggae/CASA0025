@@ -1,4 +1,4 @@
-# CASA00025 Gaza
+# Classification of changes in vegetation cover in Gaza - Based on the Israeli-Palestinian Conflict
 
 ## Project Summary 
 
@@ -220,6 +220,11 @@ The function of the model is chosen such that we use 'class' read data for categ
 
 });
 ```
+In order to check the accuracy of the results, we can compare and analyze the results with the actual images
+
+![Resulting image](images/classification.jpg)
+
+![Real image](images/after_conflict.jpg)
 
 
 10.For a better view of the results, combine all results into one layer feature.
@@ -240,14 +245,8 @@ var bare = ee.FeatureCollection(bare.map(function(feature) {
 // Merge into a FeatureCollection
 var combinedFeatures = vegetation.merge(urban).merge(bare);
 ```
-11.
-```js
-Export.table.toAsset({
-  collection: combinedFeatures,
-  description: 'land_types_2022_11',
-  assetId: 'projects/ucfnqma/assets/Gaza/land_types_2022_11'});
-```
-## Ⅱ. Interface (Analysis area and conduct the interface)
+
+## Ⅱ. Interface (Analysis area and conduct the Visual interaction)
 1. Create a map instance and Set the center point and zoom level of the map
 
 ```js
