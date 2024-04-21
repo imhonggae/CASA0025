@@ -38,8 +38,9 @@ This software utilizes satellite imagery data from the Sentinel-2 satellite prov
 
 Method：
 
-1.Random Forest- for classification
+1.Random Forest- for classification  
 ![Random Forest Diagram](images/random_forest_diagram.jpg)
+
 2.Confusion Matrix  - for validation
 
 <i>Confusion Matrix Accuracy Formula:</i>
