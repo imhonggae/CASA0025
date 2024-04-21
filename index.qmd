@@ -425,8 +425,7 @@ indexList.evaluate(function(indexs) {
 }); 
 
 var aoi = ee.FeatureCollection('users/liujingyue01/Gaza');
-var imageCollection=ee.ImageCollection('projects/hongkairen81/assets/GAZA');
-print(imageCollection)
+var imageCollection=ee.ImageCollection('projects/ee-guo112591/assets/GAZA');
 
 // Calculating the vegetation area as a function
 function calculateVegetationArea(image) {
