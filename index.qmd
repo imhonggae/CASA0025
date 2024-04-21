@@ -78,13 +78,13 @@ Replace the link below with the link to your application.
 
 ## Ⅰ. Classification and Projection of Land Use Types in Gaza
 ### Preprocessing
-1. We've defined the meanings of the data stored in the object in the code: year, month, and pathSuffix are used to respectively describe the starting date, month number, and path suffix for each month.
+1. We've defined the meanings of the data stored in the object in the code: 
 ```js
-// 定义月份的开始和结束日期
+// define the meanings of the data
 var dates = [
-  {year: 2022, month: '11', pathSuffix: '2022_11'},
-  //{year: 2022, month: '12', pathSuffix: '2022_12'},
-  //{year: 2023, month: '01', pathSuffix: '2023_01'},
+  {year: 2022, month: '11', pathSuffix: '2022_11'},// 'year' are used to describe the starting date for each month
+  //{year: 2022, month: '12', pathSuffix: '2022_12'},// 'month'are used to describe the month number for each month
+  //{year: 2023, month: '01', pathSuffix: '2023_01'},// 'pathSuffix' are used to describe the path suffix for each month
   //{year: 2023, month: '02', pathSuffix: '2023_02'},
   //{year: 2023, month: '03', pathSuffix: '2023_03'},
   //{year: 2023, month: '11', pathSuffix: '2023_11'},
@@ -94,72 +94,61 @@ var dates = [
   //{year: 2024, month: '03', pathSuffix: '2024_03'}
 ];
 ```
-2. We've defined visualization parameters. min and max represent the minimum and maximum values of the data, while bands specify the bands to be displayed in the image. 
-Here, three bands are used: 'B4', 'B3', and 'B2', corresponding to the red, green, and blue bands, typically employed for creating color images.
+2. We have defined visualization parameters, selecting appropriate bands to create a color image.
 ```js
-// 定义可视化参数
+// define visualization parameters
 var s_rgb = {
-  min: 0.0,
-  max: 6000,
-  bands:['B4', 'B3', 'B2'],
- // bands:['B8', 'B4', 'B3'], // 使用近红外、红、绿波段的假彩色合成 
+  min: 0.0,//'min' represent the minimum values of the data
+  max: 6000,//'max' represent the maximum values of the data
+  bands:['B4', 'B3', 'B2'],// three bands are used: 'B4', 'B3', and 'B2', corresponding to the red, green, and blue bands, typically employed for creating color images.
+ // bands:['B8', 'B4', 'B3'], // false-color composite using near-infrared, red, and green bands. 
   opacity:1
 };
 ```
-3. This code segment filters, processes, and visualizes the acquired Sentinel image collection. We've selected all images within the time range where cloud cover is less than 15%. 
-Then, we calculated the median of these images based on the specified bands to generate a composite image.
+3. This code filters, processes, and visualizes the acquired Sentinel image collection, resulting in a composite image.
+ Additionally, it calculates the Normalized Difference Water Index (NDWI) and removes pixels with NDWI values less than 0.3 from the composite image.
 ```js
 dates.forEach(function(dateRange) {
   var start = dateRange.year + '-' + dateRange.month + '-01';
   var end = new Date(dateRange.year, dateRange.month, 0).toISOString().split('T')[0]; // Auto-adjust month length
   var sentinel = ee.ImageCollection('COPERNICUS/S2_SR')
                     .filter(ee.Filter.date(start, end))
-                    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 15))
-                    .select(bands) // 确保在过滤之前选择一致的波段集合
-                    .median();
-```
-4. Additionally, the code calculates the Normalized Difference Water Index (NDWI) and removes pixels from the composite image where the NDWI value is less than 0.3.
-```js
+                    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 15))// selected all images within the time range with cloud cover less than 15%
+                    .select(bands) // Ensure selecting a consistent band set before filtering.
+                    .median();// calculated the median of these images based on the specified bands.
   var ndwi = sentinel.normalizedDifference(['B3','B8']).rename('ndwi');
   var image = sentinel.updateMask(ndwi.lt(0.3)).select(bands);
-  
 
-  Map.addLayer(image.clip(aoi), s_rgb, 'Sentinel ' + dateRange.year + '-' + dateRange.month);
+  Map.addLayer(image.clip(aoi), s_rgb, 'Sentinel ' + dateRange.year + '-' + dateRange.month);// Clip the processed image to the region of interest (aoi) and add it to the map using the visualization parameters s_rgb. The layer is labeled as 'Sentinel'.
 ```
-5. This portion of the code loads a FeatureCollection of land types for a specific month. 
-It specifies the dataset path for the specific month and stores it in the variable landTypes.
+4. This portion loads a FeatureCollection of land types for a specific month and stores it in the variable landTypes.
 ```js
-  // 加载特定月份的FeatureCollection
+  // Load a FeatureCollection for a specific month.
   var basePath = 'projects/ucfnqma/assets/Gaza/land_types_' + dateRange.pathSuffix;
   var landTypes = ee.FeatureCollection(basePath);
 ```
-6. The next segment of code is used to generate sample point collections for vegetation, bare soil, and urban classes respectively in Google Earth Engine.
- It adds a class label to each sample point to facilitate tasks such as land cover classification or supervised learning.
+5. This code segment generates sample point collections of three classes,merge them and adds a random column to each sample point for subsequent operations such as image clipping.
 ```js
-  // 为每种landType生成样本点
+  // Generate sample points for each land type.
   var vegetationPoints = ee.FeatureCollection.randomPoints({
     region: landTypes.filter(ee.Filter.eq('landType', 'vegetation')),
-    points: 3000 // 假设为植被类的数量
+    points: 3000 // Assuming the number of points for vegetation class
   }).map(function(feat) { return feat.set('class', 0); });
   
   var barePoints = ee.FeatureCollection.randomPoints({
     region: landTypes.filter(ee.Filter.eq('landType', 'bare')),
-    points: 2000 // 假设为裸土类的数量
+    points: 2000 // Assuming the number of points for bare soil class
   }).map(function(feat) { return feat.set('class', 1); });
   
   var urbanPoints = ee.FeatureCollection.randomPoints({
     region: landTypes.filter(ee.Filter.eq('landType', 'urban')),
-    points: 1000 // 假设为城市类的数量
+    points: 1000 // Assuming the number of points for urban class.
   }).map(function(feat) { return feat.set('class', 2); });
-```
-7. This line of code merges three classes of sample point collections into one, 
-and adds a random column to each sample point for subsequent operations such as image clipping.
-```js
-  // 合并所有样本点，并添加随机列以后续分割
+  // Merge all sample points and add a random column for subsequent segmentation.
   var sample = vegetationPoints.merge(barePoints).merge(urbanPoints).randomColumn();
 ```
 ### Analysis （Train Model and Prediction）
-8. In this section we defined the split ratio using 'var split = 0.7'.
+6. In this section we defined the split ratio using 'var split = 0.7'.
  
 ```js
  // Split sample set
@@ -169,7 +158,7 @@ and adds a random column to each sample point for subsequent operations such as 
 ```
 Based on the values of the random columns, 70% of the sample points are assigned to the verification set, and the remaining 30% are kept in the training set.
 
-9. By extracting training set and validation set, the random forest model is initially fitted so that we train the model.
+7. By extracting training set and validation set, the random forest model is initially fitted so that we train the model.
 ```js
   // take samples from image for training
   var training = image.select(bands).sampleRegions({
@@ -186,7 +175,7 @@ Based on the values of the random columns, 70% of the sample points are assigned
   }).filter(ee.Filter.notNull(bands)); 
 ```
 
-10.This section trains the model by fitting it with a training set and a validation set
+8.This section trains the model by fitting it with a training set and a validation set
 
 ```js
   // Trian the model
@@ -212,7 +201,7 @@ Based on the values of the random columns, 70% of the sample points are assigned
 ```
 The function of the model is chosen such that we use 'class' read data for categorical prediction.
 
-11.After fitting the model, we use the overall image to classify the prediction using the dataset
+9.After fitting the model, we use the overall image to classify the prediction using the dataset
 
 ```js
   var prediction = image.classify(model);
@@ -224,7 +213,7 @@ The function of the model is chosen such that we use 'class' read data for categ
 ```
 
 
-12.For a better view of the results, combine all results into one layer feature.
+10.For a better view of the results, combine all results into one layer feature.
 
 ```js
 var vegetation = ee.FeatureCollection(vegetation.map(function(feature) {
@@ -239,10 +228,10 @@ var bare = ee.FeatureCollection(bare.map(function(feature) {
   return ee.Feature(feature).set('landType', 'bare');
 }));
 
-// 合并成一个FeatureCollection
+// Merge into a FeatureCollection
 var combinedFeatures = vegetation.merge(urban).merge(bare);
 ```
-13.
+11.
 ```js
 Export.table.toAsset({
   collection: combinedFeatures,
