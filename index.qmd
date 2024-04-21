@@ -171,7 +171,7 @@ and adds a random column to each sample point for subsequent operations such as 
 ```
 Based on the values of the random columns, 70% of the sample points are assigned to the verification set, and the remaining 30% are kept in the training set.
 
-9.By extracting training set and validation set, the random forest model is initially fitted so that we train the model.
+9. By extracting training set and validation set, the random forest model is initially fitted so that we train the model.
 ```js
   // take samples from image for training
   var training = image.select(bands).sampleRegions({
@@ -187,10 +187,8 @@ Based on the values of the random columns, 70% of the sample points are assigned
     scale: 10,
   }).filter(ee.Filter.notNull(bands)); 
 ```
-'class' tells the model to extract class information from each sample point in the training set, 
-and learn how to classify based on inputProperties during training.
 
-10.
+10.This section trains the model by fitting it with a training set and a validation set
 
 ```js
   // Trian the model
@@ -206,23 +204,30 @@ and learn how to classify based on inputProperties during training.
   print('Training overall accuracy: '+ dateRange.year + '-' + dateRange.month, trainAccuracy.accuracy());
 
   // Apply the RF classifier to the validation
-  var validated = validation.classify(model); // 修正使用validation而非validation_sample
+  var validated = validation.classify(model); // Fix using validation instead of validation_sample
 
   // Calculate the confusion matrix for the validation data
   var testAccuracy = validated.errorMatrix('class', 'classification');
   print('Validation error matrix: '+ dateRange.year + '-' + dateRange.month, testAccuracy);
   print('Validation overall accuracy: '+ dateRange.year + '-' + dateRange.month, testAccuracy.accuracy());
+
 ```
-11.
+The function of the model is chosen such that we use 'class' read data for categorical prediction.
+
+11.After fitting the model, we use the overall image to classify the prediction using the dataset
+
 ```js
   var prediction = image.classify(model);
 
-  var landType_prediction = prediction.updateMask(prediction.neq(-1)); // 避免使用未分类的像素
+  var landType_prediction = prediction.updateMask(prediction.neq(-1)); // Avoid using unclassified pixels
   Map.addLayer(landType_prediction.clip(aoi), {min: 0, max: 2, palette: ['green', 'yellow', 'grey']}, 'LandType Prediction ' + dateRange.year + '-' + dateRange.month);
 
 });
 ```
-12.
+
+
+12.For a better view of the results, combine all results into one layer feature.
+
 ```js
 var vegetation = ee.FeatureCollection(vegetation.map(function(feature) {
   return ee.Feature(feature).set('landType', 'vegetation');
