@@ -150,7 +150,7 @@ and adds a random column to each sample point for subsequent operations such as 
 ```
 ### Analysis
 8. In this section we defined the split ratio using 'var split = 0.7'.
-This means assign 70% of training points to validation. 
+ 
 ```js
  // Split sample set
   var split = 0.7;
@@ -174,17 +174,42 @@ Based on the values of the random columns, 70% of the sample points are assigned
     properties: ['class'],
     scale: 10,
   }).filter(ee.Filter.notNull(bands)); 
-  
-  // Train a Random Forest classifier
-  var model = ee.Classifier.smileRandomForest(500).train({
-    features: training,
-    classProperty: 'class',
-    inputProperties: bands
-  });
 ```
 'class' tells the model to extract class information from each sample point in the training set, 
 and learn how to classify based on inputProperties during training.
 
+10.
+
+```js
+  // Trian the model
+ var model = ee.Classifier.smileRandomForest(500).train({
+    features: training,
+    classProperty: 'class',
+    inputProperties: bands
+  });
+
+  // Calculate the confusion matrix for the training data
+  var trainAccuracy = training.classify(model).errorMatrix('class', 'classification');
+  print('Training error matrix: '+ dateRange.year + '-' + dateRange.month, trainAccuracy);
+  print('Training overall accuracy: '+ dateRange.year + '-' + dateRange.month, trainAccuracy.accuracy());
+
+  // Apply the RF classifier to the validation
+  var validated = validation.classify(model); // 修正使用validation而非validation_sample
+
+  // Calculate the confusion matrix for the validation data
+  var testAccuracy = validated.errorMatrix('class', 'classification');
+  print('Validation error matrix: '+ dateRange.year + '-' + dateRange.month, testAccuracy);
+  print('Validation overall accuracy: '+ dateRange.year + '-' + dateRange.month, testAccuracy.accuracy());
+```
+11.
+```js
+  var prediction = image.classify(model);
+
+  var landType_prediction = prediction.updateMask(prediction.neq(-1)); // 避免使用未分类的像素
+  Map.addLayer(landType_prediction.clip(aoi), {min: 0, max: 2, palette: ['green', 'yellow', 'grey']}, 'LandType Prediction ' + dateRange.year + '-' + dateRange.month);
+
+});
+```
 ### Interface
 1. Create a map instance and Set the center point and zoom level of the map
 
