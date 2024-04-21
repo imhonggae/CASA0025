@@ -223,11 +223,16 @@ The function of the model is chosen such that we use 'class' read data for categ
 
 });
 ```
+To verify that our categorization is correct, we can look at the model evaluation coefficients on the right side of the taskbar
+
+![Accuracy](images/Accuracy.png)
+
 In order to check the accuracy of the results, we can compare and analyze the results with the actual images
 
 ![Resulting image](images/classification.jpg)
 
 ![Real image](images/after_conflict.jpg)
+
 
 
 10.For a better view of the results, combine all results into one layer feature.
