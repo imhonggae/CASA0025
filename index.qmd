@@ -1,4 +1,4 @@
-# Classification of changes in vegetation cover in Gaza - Based on the Israeli-Palestinian Conflict
+# Assessment of Vegetation Cover Change in Gaza Under the Israeli-Palestinian Conflict
 
 ## Project Summary 
 
