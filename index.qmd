@@ -5,6 +5,8 @@
 This application is based on remote sensing technology and machine learning algorithms to assess vegetation cover changes in Gaza during the Palestinian-Israeli conflict. Based on **Sentinel-2** satellite data and the Google Earth Engine platform, the application adopts an automated image preprocessing process (including image extraction, image synthesis, and masking) and utilizes the Random Forest algorithm to develop a classifier to distinguish between three different types of land cover: vegetation, bare land, and urban areas. The project aims to reveal changes in vegetation cover in the Gaza by generating and comparing land cover classification maps before and after the conflict, thereby providing clear evidence to assess the ongoing humanitarian crisis and urban destruction in the Gaza area.
 
 ![War hazards in Gaza](images/after_conflict.jpg)
+
+
 ### Problem Statement 
 
 **Challenges in Monitoring Vegetation Cover**:
@@ -148,9 +150,14 @@ dates.forEach(function(dateRange) {
   // Merge all sample points and add a random column for subsequent segmentation.
   var sample = vegetationPoints.merge(barePoints).merge(urbanPoints).randomColumn();
 ```
+
+Polygons are drawn for each class, which you can see under the Geometry Import TAB in the upper left corner of the code editor
+
+![Draw the training set polygons](images/select.png)
+
 ### Analysis （Train Model and Prediction）
 6. In this section we defined the split ratio using 'var split = 0.7'.
- 
+
 ```js
  // Split sample set
   var split = 0.7;
@@ -175,6 +182,7 @@ Based on the values of the random columns, 70% of the sample points are assigned
     scale: 10,
   }).filter(ee.Filter.notNull(bands)); 
 ```
+
 
 8.This section trains the model by fitting it with a training set and a validation set
 
