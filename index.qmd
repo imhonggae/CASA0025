@@ -160,7 +160,7 @@ and adds a random column to each sample point for subsequent operations such as 
   // 合并所有样本点，并添加随机列以后续分割
   var sample = vegetationPoints.merge(barePoints).merge(urbanPoints).randomColumn();
 ```
-### Analysis
+### Analysis （Train Model and Prediction）
 8. In this section we defined the split ratio using 'var split = 0.7'.
  
 ```js
@@ -251,7 +251,7 @@ Export.table.toAsset({
   description: 'land_types_2022_11',
   assetId: 'projects/ucfnqma/assets/Gaza/land_types_2022_11'});
 ```
-### Interface
+### Interface (Analysis area and conduct the interface)
 1. Create a map instance and Set the center point and zoom level of the map
 
 ```js
