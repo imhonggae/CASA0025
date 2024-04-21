@@ -247,6 +247,10 @@ var combinedFeatures = vegetation.merge(urban).merge(bare);
 ```
 
 ## Ⅱ. Interface (Analysis area and conduct the Visual interaction)
+
+The complete process code can be seen here:[Calculation of area](https://code.earthengine.google.com/9320c592587da44f17c27a9677b7d311) ; [Establish interaction](https://code.earthengine.google.com/314826aeb809af95b90d2fcf0d5aa149)
+
+
 1. Create a map instance and Set the center point and zoom level of the map
 
 ```js
