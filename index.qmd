@@ -600,6 +600,6 @@ sidebarPanel.add(label);
 
 The image output should look like this:
 
-![Changing Land conditions in Conflict, 2023.11-2024.3](images/conflict.gif)
+![Land cover changes in conflict, 2023.11-2024.3](images/conflict.gif)
 
 
