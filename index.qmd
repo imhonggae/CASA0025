@@ -80,21 +80,24 @@ Replace the link below with the link to your application.
 ## How it Works 
 
 ## Ⅰ. Classification and Projection of Land Use Types in Gaza
+
+The complete process code can be seen here:[Classification and interaction](https://code.earthengine.google.com/a26dfaa986b9f0e68fc225e584ce3872) ； [Calculation of area](https://code.earthengine.google.com/9320c592587da44f17c27a9677b7d311)
+
 ### Preprocessing
 1. We've defined the meanings of the data stored in the object in the code: 
 ```js
 // define the meanings of the data
 var dates = [
   {year: 2022, month: '11', pathSuffix: '2022_11'},// 'year' are used to describe the starting date for each month
-  //{year: 2022, month: '12', pathSuffix: '2022_12'},// 'month'are used to describe the month number for each month
-  //{year: 2023, month: '01', pathSuffix: '2023_01'},// 'pathSuffix' are used to describe the path suffix for each month
-  //{year: 2023, month: '02', pathSuffix: '2023_02'},
-  //{year: 2023, month: '03', pathSuffix: '2023_03'},
-  //{year: 2023, month: '11', pathSuffix: '2023_11'},
- // {year: 2023, month: '12', pathSuffix: '2023_12'},
-  //{year: 2024, month: '01', pathSuffix: '2024_01'},
-  //{year: 2024, month: '02', pathSuffix: '2024_02'},
-  //{year: 2024, month: '03', pathSuffix: '2024_03'}
+  {year: 2022, month: '12', pathSuffix: '2022_12'},// 'month'are used to describe the month number for each month
+  {year: 2023, month: '01', pathSuffix: '2023_01'},// 'pathSuffix' are used to describe the path suffix for each month
+  {year: 2023, month: '02', pathSuffix: '2023_02'},
+  {year: 2023, month: '03', pathSuffix: '2023_03'},
+  {year: 2023, month: '11', pathSuffix: '2023_11'},
+  {year: 2023, month: '12', pathSuffix: '2023_12'},
+  {year: 2024, month: '01', pathSuffix: '2024_01'},
+  {year: 2024, month: '02', pathSuffix: '2024_02'},
+  {year: 2024, month: '03', pathSuffix: '2024_03'}
 ];
 ```
 2. We have defined visualization parameters, selecting appropriate bands to create a color image.
