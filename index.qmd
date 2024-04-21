@@ -1,4 +1,4 @@
-# CASA00025 Group Project Title Here
+# CASA00025 KI 不吃香菜
 
 ## Project Summary 
 
@@ -209,6 +209,23 @@ and learn how to classify based on inputProperties during training.
   Map.addLayer(landType_prediction.clip(aoi), {min: 0, max: 2, palette: ['green', 'yellow', 'grey']}, 'LandType Prediction ' + dateRange.year + '-' + dateRange.month);
 
 });
+```
+12.
+```js
+var vegetation = ee.FeatureCollection(vegetation.map(function(feature) {
+  return ee.Feature(feature).set('landType', 'vegetation');
+}));
+
+var urban = ee.FeatureCollection(urban.map(function(feature) {
+  return ee.Feature(feature).set('landType', 'urban');
+}));
+
+var bare = ee.FeatureCollection(bare.map(function(feature) {
+  return ee.Feature(feature).set('landType', 'bare');
+}));
+
+// 合并成一个FeatureCollection
+var combinedFeatures = vegetation.merge(urban).merge(bare);
 ```
 ### Interface
 1. Create a map instance and Set the center point and zoom level of the map
