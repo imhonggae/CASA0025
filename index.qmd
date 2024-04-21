@@ -227,6 +227,13 @@ var bare = ee.FeatureCollection(bare.map(function(feature) {
 // 合并成一个FeatureCollection
 var combinedFeatures = vegetation.merge(urban).merge(bare);
 ```
+13.
+```js
+Export.table.toAsset({
+  collection: combinedFeatures,
+  description: 'land_types_2022_11',
+  assetId: 'projects/ucfnqma/assets/Gaza/land_types_2022_11'});
+```
 ### Interface
 1. Create a map instance and Set the center point and zoom level of the map
 
